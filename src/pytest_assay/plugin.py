@@ -302,7 +302,9 @@ def pytest_runtest_teardown(item: Item, nextitem: Item | None) -> Generator[None
         item: The pytest test item being torn down.
         nextitem: The next test item (if any).
     """
-    if _is_assay(item):
+    # Only run teardown for assay tests where the call phase actually ran.
+    # pytest_runtest_call sets AGENT_RESPONSES_KEY; if absent, the test was skipped.
+    if _is_assay(item) and AGENT_RESPONSES_KEY in item.stash:
         assay: AssayContext | None = item.funcargs.get("context")  # type: ignore[attr-defined]
         if assay is not None:
             if assay.assay_mode == "new_baseline":
