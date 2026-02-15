@@ -26,12 +26,10 @@
       "WebFetch(domain:context7.com)",
       "WebFetch(domain:github.com)",
       "WebSearch",
-      "Bash(uv run:*)",
       "Bash(uv run pytest:*)",
       "Bash(uv run ruff format:*)",
       "Bash(uv run ruff check:*)",
       "Bash(uv run pyright:*)",
-      "Bash(python3:*)",
       "Bash(python -m pytest:*)"
     ]
   },
