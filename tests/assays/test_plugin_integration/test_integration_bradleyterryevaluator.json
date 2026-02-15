@@ -1,0 +1,96 @@
+{
+  "name": null,
+  "cases": [
+    {
+      "name": "case_000",
+      "inputs": {
+        "topic": "pangolin trafficking networks"
+      },
+      "metadata": null,
+      "expected_output": "\"pangolin trafficking networks international trade\"",
+      "evaluators": []
+    },
+    {
+      "name": "case_001",
+      "inputs": {
+        "topic": "molecular gastronomy"
+      },
+      "metadata": null,
+      "expected_output": "\"definition and techniques of molecular gastronomy\"",
+      "evaluators": []
+    },
+    {
+      "name": "case_002",
+      "inputs": {
+        "topic": "dark kitchen economics"
+      },
+      "metadata": null,
+      "expected_output": "\"economics of dark kitchens delivery-only restaurants industry analysis\"",
+      "evaluators": []
+    },
+    {
+      "name": "case_003",
+      "inputs": {
+        "topic": "kintsugi philosophy"
+      },
+      "metadata": null,
+      "expected_output": "\"meaning and application of kintsugi philosophy\"",
+      "evaluators": []
+    },
+    {
+      "name": "case_004",
+      "inputs": {
+        "topic": "nano-medicine delivery systems"
+      },
+      "metadata": null,
+      "expected_output": "\"nano medicine delivery systems applications and challenges\"",
+      "evaluators": []
+    },
+    {
+      "name": "case_005",
+      "inputs": {
+        "topic": "Streisand effect dynamics"
+      },
+      "metadata": null,
+      "expected_output": "\"mechanics and impact of the Streisand effect in online environments\"",
+      "evaluators": []
+    },
+    {
+      "name": "case_006",
+      "inputs": {
+        "topic": "Anne Brorhilker"
+      },
+      "metadata": null,
+      "expected_output": "\"Anne Brorhilker biography and career achievements\"",
+      "evaluators": []
+    },
+    {
+      "name": "case_007",
+      "inputs": {
+        "topic": "bioconcrete self-healing"
+      },
+      "metadata": null,
+      "expected_output": "\"self-healing bioconcrete mechanisms and applications\"",
+      "evaluators": []
+    },
+    {
+      "name": "case_008",
+      "inputs": {
+        "topic": "bacteriophage therapy revival"
+      },
+      "metadata": null,
+      "expected_output": "\"revival of bacteriophage therapy in modern medicine\"",
+      "evaluators": []
+    },
+    {
+      "name": "case_009",
+      "inputs": {
+        "topic": "Habsburg jaw genetics"
+      },
+      "metadata": null,
+      "expected_output": "\"Habsburg jaw genetic causes and inheritance\"",
+      "evaluators": []
+    }
+  ],
+  "evaluators": []
+}

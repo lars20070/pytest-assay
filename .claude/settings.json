@@ -1,0 +1,71 @@
+{
+  "projectName": "Pytest-assay",
+  "description": "A framework for the evaluation of Pydantic AI agents",
+  "language": "python",
+  "pythonVersion": "3.12",
+  "framework": "pytest + pydantic-ai",
+  "testFramework": "pytest",
+  "codeStyle": {
+    "formatter": "ruff",
+    "linter": "ruff",
+    "typeChecker": "pyright",
+    "maxLineLength": 150
+  },
+  "dependencies": {
+    "runtime": [
+      "pytest",
+      "pydantic-ai",
+      "loguru"
+    ],
+    "dev": [
+      "pytest",
+      "pytest-asyncio",
+      "pytest-vcr",
+      "pytest-cov",
+      "ruff",
+      "pyright",
+      "uv"
+    ]
+  },
+  "projectStructure": {
+    "src": "src/pytest-assay/",
+    "tests": "tests/"
+  },
+  "keyFiles": [
+    "src/pytest-assay/logger.py",
+    ".claude/CLAUDE.md"
+  ],
+  "conventions": {
+    "asyncPatterns": "Use async/await for all LLM interactions and web searches",
+    "errorHandling": "Use tenacity for retries, loguru for logging",
+    "testMarkers": "Use pytest markers: 'ollama'",
+    "docstrings": "Use Google-style docstrings without backticks",
+    "typeHints": "Required for all functions, use Python 3.12+ syntax",
+    "imports": "Standard library, then third-party, then local imports"
+  },
+  "architecture": {
+    "pattern": "Directed graph workflow with specialized nodes",
+    "nodes": [
+      "WebSearch",
+      "SummarizeSearchResults",
+      "ReflectOnSearch",
+      "FinalizeSummary"
+    ],
+    "agents": "Specialized LLM agents for different workflow steps",
+    "searchEngines": [
+      "DuckDuckGo (default)",
+      "Tavily",
+      "Perplexity"
+    ],
+    "models": "Local via Ollama or cloud models"
+  },
+  "commands": {
+    "install": "uv sync",
+    "test": "uv run pytest",
+    "testParallel": "uv run pytest -n auto",
+    "coverage": "uv run pytest --cov=src/pytest-assay --cov-report=term-missing",
+    "format": "uv run ruff format .",
+    "lint": "uv run ruff check --fix .",
+    "typecheck": "uv run pyright ."
+  }
+}

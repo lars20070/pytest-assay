@@ -1,0 +1,111 @@
+{
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+  "editor.formatOnSave": true,
+  "[markdown]": {
+    "editor.formatOnSave": false
+  },
+  "editor.inlineSuggest.enabled": true,
+  "python.languageServer": "Pylance",
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestEnabled": true,
+  "python.testing.cwd": "${workspaceFolder}",
+  "python.testing.autoTestDiscoverOnSaveEnabled": false,
+  "python.testing.pytestArgs": [
+    "-n",
+    "auto"
+  ],
+  "autoDocstring.docstringFormat": "google",
+  "[python]": {
+    "editor.tabSize": 4,
+    "editor.defaultFormatter": "charliermarsh.ruff"
+  },
+  "[toml]": {
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true
+  },
+  "github.copilot.enable": {
+    "*": true,
+    "bash": true,
+    "yaml": true,
+    "toml": true,
+    "python": true,
+    "markdown": true,
+    "plaintext": false
+  },
+  "chat.agent.enabled": true,
+  "cSpell.enabled": true,
+  "cSpell.allowCompoundWords": true,
+  "cSpell.language": "en",
+  "cSpell.ignorePaths": [
+    "**/*.json"
+  ],
+  "cSpell.words": [
+    "iloc",
+    "logit",
+    "pytest",
+    "ollama",
+    "pylint",
+    "Nilse",
+    "isort",
+    "pycodestyle",
+    "pyflakes",
+    "pyupgrade",
+    "numpy",
+    "xgboost",
+    "scipy",
+    "dotenv",
+    "kwargs",
+    "virtualenv",
+    "venv",
+    "texw",
+    "pycache",
+    "pyproject",
+    "xdist",
+    "pydocstyle",
+    "pydantic",
+    "asyncio",
+    "isinstance",
+    "Tpng",
+    "Grankdir",
+    "pydanticai",
+    "evals",
+    "mcpserver",
+    "Nemo",
+    "petrichor",
+    "qwen",
+    "httpx",
+    "gptoss",
+    "pyright",
+    "choix",
+    "fastmcp",
+    "trixie",
+    "unsanitized",
+    "zstd",
+    "pypi"
+  ],
+  "cSpell.languageSettings": [
+    {
+      "languageId": "python",
+      "enabled": true,
+      "includeRegExpList": [
+        "Python Docstrings"
+      ],
+      "patterns": [
+        {
+          "name": "Python Docstrings",
+          "pattern": "^\\s*(\"\"\")[^\"\"\"]*(\"\"\")"
+        }
+      ]
+    }
+  ],
+  "shellcheck.ignorePatterns": {
+    "**/.env.example": true,
+    "**/.env": true
+  },
+  "logViewer.watch": [
+    {
+      "title": "pytest-assay",
+      "pattern": "pytest-assay.log"
+    }
+  ]
+}
