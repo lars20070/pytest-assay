@@ -62,7 +62,7 @@ def test_path_computation(mocker: MockerFixture) -> None:
 
     result = _path(mock_item)
 
-    expected = Path("/project/tests/pytest_assay/test_example/test_my_function.json")
+    expected = Path("/project/tests/assays/test_example/test_my_function.json")
     assert result == expected
 
     # Verify path is absolute
@@ -71,8 +71,8 @@ def test_path_computation(mocker: MockerFixture) -> None:
     # Verify path ends with .json
     assert result.suffix == ".json"
 
-    # Verify pytest_assay directory is in the path
-    assert "pytest_assay" in result.parts
+    # Verify assays directory is in the path
+    assert "assays" in result.parts
 
 
 def test_path_computation_with_parametrized_test(mocker: MockerFixture) -> None:
@@ -84,7 +84,7 @@ def test_path_computation_with_parametrized_test(mocker: MockerFixture) -> None:
     result = _path(mock_item)
 
     # Should strip everything after the bracket
-    expected = Path("/project/tests/pytest_assay/test_example/test_my_function.json")
+    expected = Path("/project/tests/assays/test_example/test_my_function.json")
     assert result == expected
 
 
@@ -96,7 +96,7 @@ def test_path_computation_nested_directory(mocker: MockerFixture) -> None:
 
     result = _path(mock_item)
 
-    expected = Path("/project/tests/integration/api/pytest_assay/test_endpoints/test_get_user.json")
+    expected = Path("/project/tests/integration/api/assays/test_endpoints/test_get_user.json")
     assert result == expected
 
 
@@ -185,7 +185,7 @@ def test_pytest_runtest_setup_non_assay_item(mocker: MockerFixture) -> None:
 def test_pytest_runtest_setup_with_existing_dataset(mocker: MockerFixture, tmp_path: Path) -> None:
     """Test pytest_runtest_setup loads existing dataset from file."""
     # Create a temporary dataset file with realistic topic data
-    dataset_path = tmp_path / "pytest_assay" / "test_module" / "test_func.json"
+    dataset_path = tmp_path / "assays" / "test_module" / "test_func.json"
     dataset_path.parent.mkdir(parents=True)
     dataset = Dataset[dict[str, str], type[None], Any](
         cases=[
@@ -246,7 +246,7 @@ def test_pytest_runtest_setup_with_existing_dataset(mocker: MockerFixture, tmp_p
 
 def test_pytest_runtest_setup_with_generator(mocker: MockerFixture, tmp_path: Path) -> None:
     """Test pytest_runtest_setup calls generator when no dataset file exists."""
-    dataset_path = tmp_path / "pytest_assay" / "test_module" / "test_func.json"
+    dataset_path = tmp_path / "assays" / "test_module" / "test_func.json"
 
     # Mock generator that returns a dataset (like generate_evaluation_cases in test_curiosity.py)
     topics = ["pangolin trafficking", "molecular gastronomy", "dark kitchen economics"]
@@ -305,7 +305,7 @@ def test_pytest_runtest_setup_with_generator(mocker: MockerFixture, tmp_path: Pa
 
 def test_pytest_runtest_setup_generator_invalid_return(mocker: MockerFixture, tmp_path: Path) -> None:
     """Test pytest_runtest_setup raises TypeError for invalid generator return."""
-    dataset_path = tmp_path / "pytest_assay" / "test_module" / "test_func.json"
+    dataset_path = tmp_path / "assays" / "test_module" / "test_func.json"
 
     # Mock generator that returns invalid type
     mock_generator = mocker.MagicMock(return_value="not a dataset")
@@ -326,7 +326,7 @@ def test_pytest_runtest_setup_generator_invalid_return(mocker: MockerFixture, tm
 
 def test_pytest_runtest_setup_empty_dataset(mocker: MockerFixture, tmp_path: Path) -> None:
     """Test pytest_runtest_setup uses empty dataset when no file or generator."""
-    dataset_path = tmp_path / "pytest_assay" / "test_module" / "test_func.json"
+    dataset_path = tmp_path / "assays" / "test_module" / "test_func.json"
 
     mock_item = mocker.MagicMock(spec=Function)
     mock_item.funcargs = {}
@@ -351,7 +351,7 @@ def test_pytest_runtest_setup_empty_dataset(mocker: MockerFixture, tmp_path: Pat
 
 def test_pytest_runtest_setup_baseline_stash_is_copy(mocker: MockerFixture, tmp_path: Path) -> None:
     """Test that mutating assay.dataset does not change the stashed baseline."""
-    dataset_path = tmp_path / "pytest_assay" / "test_module" / "test_func.json"
+    dataset_path = tmp_path / "assays" / "test_module" / "test_func.json"
     dataset_path.parent.mkdir(parents=True)
     dataset = Dataset[dict[str, str], type[None], Any](
         cases=[
@@ -600,7 +600,7 @@ def test_pytest_runtest_teardown_no_assay_context(mocker: MockerFixture) -> None
 
 def test_pytest_runtest_teardown_new_baseline_mode(mocker: MockerFixture, tmp_path: Path) -> None:
     """Test pytest_runtest_teardown merges captured responses and serializes dataset in new_baseline mode."""
-    dataset_path = tmp_path / "pytest_assay" / "test.json"
+    dataset_path = tmp_path / "assays" / "test.json"
 
     # Create dataset with cases that have empty expected_output (as generated)
     cases: list[Case[dict[str, str], str, Any]] = [
@@ -647,7 +647,7 @@ def test_pytest_runtest_teardown_new_baseline_mode(mocker: MockerFixture, tmp_pa
 
 def test_pytest_runtest_teardown_new_baseline_response_count_mismatch(mocker: MockerFixture, tmp_path: Path) -> None:
     """Test pytest_runtest_teardown skips serialization when response count mismatches case count."""
-    dataset_path = tmp_path / "pytest_assay" / "test.json"
+    dataset_path = tmp_path / "assays" / "test.json"
 
     cases: list[Case[dict[str, str], str, Any]] = [
         Case(name="case_000", inputs={"topic": "topic A"}, expected_output=""),
@@ -679,7 +679,7 @@ def test_pytest_runtest_teardown_new_baseline_response_count_mismatch(mocker: Mo
 
 def test_pytest_runtest_teardown_new_baseline_none_output(mocker: MockerFixture, tmp_path: Path) -> None:
     """Test pytest_runtest_teardown uses empty string for None response output."""
-    dataset_path = tmp_path / "pytest_assay" / "test.json"
+    dataset_path = tmp_path / "assays" / "test.json"
 
     cases: list[Case[dict[str, str], str, Any]] = [
         Case(name="case_000", inputs={"topic": "topic A"}, expected_output=""),
@@ -708,7 +708,7 @@ def test_pytest_runtest_teardown_new_baseline_none_output(mocker: MockerFixture,
 
 def test_pytest_runtest_teardown_new_baseline_no_responses(mocker: MockerFixture, tmp_path: Path) -> None:
     """Test pytest_runtest_teardown skips serialization when no responses captured but cases exist."""
-    dataset_path = tmp_path / "pytest_assay" / "test.json"
+    dataset_path = tmp_path / "assays" / "test.json"
 
     cases: list[Case[dict[str, str], str, Any]] = [
         Case(name="case_000", inputs={"topic": "topic A"}, expected_output=""),
@@ -737,7 +737,7 @@ def test_pytest_runtest_teardown_new_baseline_no_responses(mocker: MockerFixture
 
 def test_pytest_runtest_teardown_evaluate_mode(mocker: MockerFixture, tmp_path: Path) -> None:
     """Test pytest_runtest_teardown does not serialize dataset in evaluate mode."""
-    dataset_path = tmp_path / "pytest_assay" / "test.json"
+    dataset_path = tmp_path / "assays" / "test.json"
     dataset = Dataset[dict[str, str], type[None], Any](cases=[])
 
     mock_item = mocker.MagicMock(spec=Function)
@@ -760,7 +760,7 @@ def test_pytest_runtest_teardown_evaluate_mode(mocker: MockerFixture, tmp_path: 
 def test_pytest_runtest_teardown_runs_evaluation(mocker: MockerFixture, tmp_path: Path) -> None:
     """Test pytest_runtest_teardown runs evaluation and serializes readout in evaluate mode."""
     dataset = Dataset[dict[str, str], type[None], Any](cases=[])
-    assay_path = tmp_path / "pytest_assay" / "test_module" / "test_func.json"
+    assay_path = tmp_path / "assays" / "test_module" / "test_func.json"
     assay_path.parent.mkdir(parents=True, exist_ok=True)
 
     mock_item = mocker.MagicMock(spec=Function)
@@ -797,7 +797,7 @@ def test_pytest_runtest_teardown_runs_evaluation(mocker: MockerFixture, tmp_path
 def test_pytest_runtest_teardown_uses_default_evaluator(mocker: MockerFixture, tmp_path: Path) -> None:
     """Test pytest_runtest_teardown uses BradleyTerryEvaluator() as default."""
     dataset = Dataset[dict[str, str], type[None], Any](cases=[])
-    assay_path = tmp_path / "pytest_assay" / "test_module" / "test_func.json"
+    assay_path = tmp_path / "assays" / "test_module" / "test_func.json"
     assay_path.parent.mkdir(parents=True, exist_ok=True)
 
     mock_item = mocker.MagicMock(spec=Function)
@@ -887,7 +887,7 @@ def test_full_assay_workflow_with_topic_generation(mocker: MockerFixture, tmp_pa
     3. Agent.run() responses are captured in AGENT_RESPONSES_KEY
     4. Teardown merges responses into expected_output and serializes
     """
-    dataset_path = tmp_path / "pytest_assay" / "test_curiosity" / "test_search_queries.json"
+    dataset_path = tmp_path / "assays" / "test_curiosity" / "test_search_queries.json"
 
     # Define topics like in test_curiosity.py
     topics = ["pangolin trafficking networks", "molecular gastronomy", "dark kitchen economics"]
