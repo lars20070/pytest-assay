@@ -1,0 +1,141 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/python
+{
+  "name": "Pytest-assay",
+  // "image": "ghcr.io/lars20070/pytest-assay-devcontainer:latest",
+  "build": {
+    "dockerfile": "Dockerfile"
+    // "cacheFrom": "ghcr.io/lars20070/pytest-assay-devcontainer:latest" // Note that this image is for an amd64 architecture only.
+  },
+  // Features to add to the dev container. More info: https://containers.dev/features.
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/rocker-org/devcontainer-features/pandoc:1": {},
+    "ghcr.io/lukewiwa/features/shellcheck:0": {},
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installLsof": true,
+      "installBuildTools": true, // This option installs build-essential
+      "upgradePackages": true,
+      "installZsh": true,
+      "installOhMyZsh": false
+    },
+    "ghcr.io/devcontainers/features/node:1": { // Required for local Context7 MCP server
+      "version": "lts"
+    },
+    "ghcr.io/devcontainers-community/features/deno:1": { // Required for https://github.com/pydantic/mcp-run-python
+      "version": "2.5.6"
+    }
+  },
+  // Port forwarding for local services
+  "forwardPorts": [
+    11434,
+    1234
+  ],
+  "portsAttributes": {
+    "11434": {
+      "label": "Ollama",
+      "onAutoForward": "silent"
+    },
+    "1234": {
+      "label": "LM Studio",
+      "onAutoForward": "silent"
+    }
+  },
+  // Add additional container run arguments.
+  "runArgs": [
+    "--add-host=host.docker.internal:host-gateway"
+  ], // Required for Linux where Docker runs natively and not as Docker Desktop (macOS). Allows connecting to services running on host machine. See OLLAMA_HOST below.
+  // Use 'containerEnv' to set environment variables in the container. Visible system-wide. For example when `docker exec` is used.
+  "containerEnv": {
+    "OLLAMA_HOST": "http://host.docker.internal:11434", // Connect to Ollama instance running on host machine.
+    "LMSTUDIO_HOST": "http://host.docker.internal:1234", // Connect to LM Studio instance running on host machine.
+    "COLUMNS": "150",
+    "CI": "false",
+    "LOGFIRE_INSPECT_ARGUMENTS": "1",
+    "CMAKE_ARGS": "-DGGML_NATIVE=OFF", // Switch off native architecture optimization! Building llama-cpp-python on Apple Silicon fails otherwise.
+    "UV_FROZEN": "0",
+    "UV_LINK_MODE": "copy",
+    "UV_COMPILE_BYTECODE": "1", // uv will compile .py files to .pyc files. Speeds up startup time.
+    "PYTHONUNBUFFERED": "1" // Ensure stdout and stderr are unbuffered.
+  },
+  // Use 'remoteEnv' to set environment variables for the remote workspace. Visible to VS Code background process only.
+  "remoteEnv": {},
+  // Use 'postCreateCommand' to run commands after the container is created.
+  // Note that the .venv in the Debian dev container might be incompatible to the one on the host machine. Hence, we recreate it here.
+  "postCreateCommand": [
+    "bash",
+    "-c",
+    "rm -rf .venv 2>/dev/null || true && uv sync"
+  ],
+  //"postStartCommand": "",
+  // Configure tool-specific properties.
+  // Please keep minimal. For further customizations, use .vscode and .cursor in the "mounts" section.
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": ".venv/bin/python"
+      },
+      "extensions": [
+        // Python
+        "ms-python.python",
+        "charliermarsh.ruff",
+        "njpwerner.autodocstring",
+        "ms-python.vscode-pylance",
+        // yaml + toml
+        "redhat.vscode-yaml",
+        "tamasfe.even-better-toml",
+        // Bash
+        "timonwong.shellcheck",
+        "mkhl.shfmt",
+        // git + GitHub Actions
+        "ivanhofer.git-assistant",
+        "GitHub.vscode-github-actions",
+        "me-dutour-mathieu.vscode-github-actions",
+        "GitHub.vscode-pull-request-github",
+        // Copilot
+        "GitHub.copilot-chat",
+        "ms-vscode.vscode-copilot-data-analysis",
+        "AutomataLabs.copilot-mcp",
+        "CodeRabbit.coderabbit-vscode",
+        // Spell checker
+        "streetsidesoftware.code-spell-checker",
+        // logging
+        "berublan.vscode-log-viewer",
+        // mermaid
+        "bierner.markdown-mermaid",
+        // Makefile
+        "ms-vscode.makefile-tools"
+      ]
+    },
+    "cursor": {
+      "settings": {
+        "python.defaultInterpreterPath": ".venv/bin/python"
+      },
+      "extensions": [
+        // Python
+        "anysphere.pyright",
+        "charliermarsh.ruff",
+        // yaml + toml
+        "redhat.vscode-yaml",
+        "tamasfe.even-better-toml"
+      ]
+    }
+  }
+  // Uncomment to copy .env file into the container.
+  // "initializeCommand": "cp ../my-env/.env ./.env",
+  // Uncomment to mount .vscode and .cursor directories from other repositories or directories.
+  // "mounts": [
+  //   {
+  //     "source": "${localWorkspaceFolder}/../my-vscode-config/.vscode",
+  //     "target": "${containerWorkspaceFolder}/.vscode",
+  //     "type": "bind"
+  //   },
+  //   {
+  //     "source": "${localWorkspaceFolder}/../my-cursor-config/.cursor",
+  //     "target": "${containerWorkspaceFolder}/.cursor",
+  //     "type": "bind"
+  //   }
+  // ]
+  // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+  // "remoteUser": "root"
+}
