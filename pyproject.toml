@@ -126,7 +126,7 @@ markers = [
 
 [tool.coverage.run]
 branch = true
-source = ["pytest-assay"]
+source = ["pytest_assay"]
 disable_warnings = ["module-not-measured"]
 omit = [
   "tests/*",
