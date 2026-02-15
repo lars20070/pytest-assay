@@ -35,7 +35,7 @@
       "Bash(python -m pytest:*)"
     ]
   },
-  "enableAllProjectMcpServers": true,
+  "enableAllProjectMcpServers": false,
   "enabledMcpjsonServers": [
     "context7",
     "github"
