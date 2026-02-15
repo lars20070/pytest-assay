@@ -45,7 +45,7 @@ def _path(item: Item) -> Path:
     path = item.path
     module_name = path.stem
     test_name = item.name.split("[")[0]
-    return path.parent / "pytest_assay" / module_name / f"{test_name}.json"
+    return path.parent / "assays" / module_name / f"{test_name}.json"
 
 
 def _is_assay(item: Item) -> bool:

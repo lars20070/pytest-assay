@@ -42,10 +42,10 @@ async def test_query_generation(context: AssayContext):
         async with agent:
             result = await agent.run(user_prompt=f"Generate a search query for the following topic: <TOPIC>{case.inputs['topic']}</TOPIC>")
 ```
-Both baseline responses and the final *readout* report are stored in the `pytest-assay/` subfolder.
+Both baseline responses and the final *readout* report are stored in the `assays/` subfolder.
 ```
 tests
-├── pytest-assay
+├── assays
 │   └── test_evaluation
 │       ├── test_query_generation.json            # Baseline data
 │       └── test_query_generation.readout.json    # Readout report

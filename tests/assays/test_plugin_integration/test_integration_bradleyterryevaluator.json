@@ -92,5 +92,6 @@
       "evaluators": []
     }
   ],
-  "evaluators": []
+  "evaluators": [],
+  "report_evaluators": []
 }
