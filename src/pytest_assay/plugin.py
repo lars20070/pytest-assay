@@ -81,7 +81,7 @@ def _serialize_baseline(item: Item, assay: AssayContext) -> None:
         return
 
     for case, response in zip(cases, responses, strict=True):
-        output = response.output if response.output is not None else ""
+        output = str(response.output) if response.output is not None else ""
         case.expected_output = output.strip('"')
 
     logger.info(f"Serializing assay dataset to {assay.path}")
