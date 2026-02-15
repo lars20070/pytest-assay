@@ -37,7 +37,7 @@ _current_item_var: contextvars.ContextVar[Item | None] = contextvars.ContextVar(
 
 def _path(item: Item) -> Path:
     """
-    Compute assay file path: <test_dir>/pytest_assay/<module>/<test>.json.
+    Compute assay file path: <test_dir>/assays/<module>/<test>.json.
 
     Args:
         item: The pytest test item.
