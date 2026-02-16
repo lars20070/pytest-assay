@@ -110,8 +110,8 @@ jobs:
           imageTag: latest,${{ github.sha }}
           platform: linux/amd64,linux/arm64
           push: filter
-          refFilterForPush: refs/heads/**
-          # refFilterForPush: refs/heads/master
+          # refFilterForPush: refs/heads/**
+          refFilterForPush: refs/heads/master
           runCmd: |
             bash -c '
               set -o errexit -o pipefail -o nounset
