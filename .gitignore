@@ -19,3 +19,4 @@ codeql-custom-queries-python/
 # Coding agents
 .cursor/mcp.json
 .mcp.json
+.claude/*.local.json

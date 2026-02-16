@@ -81,7 +81,8 @@
     "trixie",
     "unsanitized",
     "zstd",
-    "pypi"
+    "pypi",
+    "Buildx"
   ],
   "cSpell.languageSettings": [
     {

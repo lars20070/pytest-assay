@@ -591,6 +591,7 @@ def test_pytest_runtest_teardown_no_assay_context(mocker: MockerFixture) -> None
     """Test pytest_runtest_teardown handles missing assay context gracefully."""
     mock_item = mocker.MagicMock(spec=Function)
     mock_item.funcargs = {}  # No assay context
+    mock_item.stash = {AGENT_RESPONSES_KEY: []}
 
     mocker.patch("pytest_assay.plugin._is_assay", return_value=True)
 
@@ -717,7 +718,7 @@ def test_pytest_runtest_teardown_new_baseline_no_responses(mocker: MockerFixture
 
     mock_item = mocker.MagicMock(spec=Function)
     mock_item.funcargs = {"context": AssayContext(dataset=dataset, path=dataset_path, assay_mode="new_baseline")}
-    mock_item.stash = {}  # No AGENT_RESPONSES_KEY
+    mock_item.stash = {AGENT_RESPONSES_KEY: []}  # Call phase ran but captured 0 responses
 
     mocker.patch("pytest_assay.plugin._is_assay", return_value=True)
     mock_logger = mocker.patch("pytest_assay.plugin.logger")
@@ -742,6 +743,7 @@ def test_pytest_runtest_teardown_evaluate_mode(mocker: MockerFixture, tmp_path: 
 
     mock_item = mocker.MagicMock(spec=Function)
     mock_item.funcargs = {"context": AssayContext(dataset=dataset, path=dataset_path, assay_mode="evaluate")}
+    mock_item.stash = {AGENT_RESPONSES_KEY: []}
     mock_marker = mocker.MagicMock()
     mock_marker.kwargs = {"evaluator": AsyncMock(return_value=Readout(passed=True))}
     mock_item.get_closest_marker.return_value = mock_marker
@@ -765,6 +767,7 @@ def test_pytest_runtest_teardown_runs_evaluation(mocker: MockerFixture, tmp_path
 
     mock_item = mocker.MagicMock(spec=Function)
     mock_item.funcargs = {"context": AssayContext(dataset=dataset, path=assay_path, assay_mode="evaluate")}
+    mock_item.stash = {AGENT_RESPONSES_KEY: []}
     mock_marker = mocker.MagicMock()
 
     # Custom evaluator mock - returns Readout with details
@@ -832,6 +835,7 @@ def test_pytest_runtest_teardown_invalid_evaluator(mocker: MockerFixture) -> Non
 
     mock_item = mocker.MagicMock(spec=Function)
     mock_item.funcargs = {"context": AssayContext(dataset=dataset, path=Path("/tmp/test.json"), assay_mode="evaluate")}
+    mock_item.stash = {AGENT_RESPONSES_KEY: []}
     mock_marker = mocker.MagicMock()
     mock_marker.kwargs = {"evaluator": "not_callable"}  # Invalid
     mock_item.get_closest_marker.return_value = mock_marker
@@ -853,6 +857,7 @@ def test_pytest_runtest_teardown_evaluation_exception(mocker: MockerFixture) -> 
 
     mock_item = mocker.MagicMock(spec=Function)
     mock_item.funcargs = {"context": AssayContext(dataset=dataset, path=Path("/tmp/test.json"), assay_mode="evaluate")}
+    mock_item.stash = {AGENT_RESPONSES_KEY: []}
     mock_marker = mocker.MagicMock()
 
     # Evaluator that raises an exception
