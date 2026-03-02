@@ -14,7 +14,7 @@ from pytest import Config, Function, Item, Parser
 from .evaluators.bradleyterry import BradleyTerryEvaluator  # noqa: F401
 from .evaluators.pairwise import PairwiseEvaluator  # noqa: F401
 from .logger import logger
-from .models import AssayContext, Evaluator, Readout  # noqa: F401
+from .models import AssayContext, Evaluator, EvaluatorInput, Readout  # noqa: F401
 
 # Modes for the assay plugin. "evaluate" is the default mode.
 ASSAY_MODES = ("evaluate", "new_baseline")
@@ -107,9 +107,15 @@ def _run_evaluation(item: Item, assay: AssayContext) -> None:
         logger.error(f"Invalid evaluator type: {type(evaluator)}. Expected callable.")
         return
 
+    # Build EvaluatorInput from stash
+    eval_input = EvaluatorInput(
+        baseline_dataset=item.stash.get(BASELINE_DATASET_KEY, None),
+        agent_responses=item.stash.get(AGENT_RESPONSES_KEY, []),
+    )
+
     # Run the evaluator asynchronously
     try:
-        readout = asyncio.run(evaluator(item))
+        readout = asyncio.run(evaluator(eval_input))
         logger.info(f"Evaluation result: passed={readout.passed}")
 
         # Serialize the readout

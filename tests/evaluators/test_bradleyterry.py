@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import inspect
-from pathlib import Path
 from types import SimpleNamespace
 from typing import TYPE_CHECKING, Any
 from unittest.mock import MagicMock
@@ -14,9 +13,7 @@ from pydantic_ai.agent import AgentRunResult
 from pydantic_ai.models.openai import OpenAIChatModel
 from pydantic_ai.providers.openai import OpenAIProvider
 from pydantic_evals import Case, Dataset
-from pytest import Function
 
-import pytest_assay.plugin
 from pytest_assay.evaluators.bradleyterry import (
     EVALUATION_INSTRUCTIONS,
     BradleyTerryEvaluator,
@@ -28,8 +25,7 @@ from pytest_assay.evaluators.bradleyterry import (
     round_robin_strategy,
 )
 from pytest_assay.logger import logger
-from pytest_assay.models import AssayContext, Readout
-from pytest_assay.plugin import BASELINE_DATASET_KEY
+from pytest_assay.models import EvaluatorInput, Readout
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -299,16 +295,14 @@ class TestBradleyTerryEvaluator:
     async def test_call_no_players(self, mocker: MockerFixture) -> None:
         """Test BradleyTerryEvaluator.__call__ handles empty player list."""
         evaluator = BradleyTerryEvaluator()
-        mock_item = mocker.MagicMock(spec=Function)
-        mock_item.funcargs = {"context": None}
-        mock_item.stash = {
-            pytest_assay.plugin.AGENT_RESPONSES_KEY: [],
-            BASELINE_DATASET_KEY: Dataset[dict[str, str], type[None], Any](cases=[]),
-        }
+        eval_input = EvaluatorInput(
+            baseline_dataset=Dataset[dict[str, str], type[None], Any](cases=[]),
+            agent_responses=[],
+        )
 
         mocker.patch("pytest_assay.evaluators.bradleyterry.logger")
 
-        result = await evaluator(mock_item)
+        result = await evaluator(eval_input)
 
         assert isinstance(result, Readout)
         assert result.passed is True
@@ -335,12 +329,10 @@ class TestBradleyTerryEvaluator:
         mock_response = mocker.MagicMock(spec=AgentRunResult)
         mock_response.output = "novel output"
 
-        mock_item = mocker.MagicMock(spec=Function)
-        mock_item.funcargs = {"context": AssayContext(dataset=dataset, path=Path("/tmp/test.json"), assay_mode="evaluate")}
-        mock_item.stash = {
-            pytest_assay.plugin.AGENT_RESPONSES_KEY: [mock_response],
-            BASELINE_DATASET_KEY: dataset,
-        }
+        eval_input = EvaluatorInput(
+            baseline_dataset=dataset,
+            agent_responses=[mock_response],
+        )
 
         mocker.patch("pytest_assay.evaluators.bradleyterry.logger")
 
@@ -352,7 +344,7 @@ class TestBradleyTerryEvaluator:
         mock_tournament.get_player_by_idx = MagicMock(return_value=mock_player)
         mock_tournament_class.return_value = mock_tournament
 
-        result = await evaluator(mock_item)
+        result = await evaluator(eval_input)
 
         # Verify tournament was created with correct criterion
         mock_tournament_class.assert_called_once()

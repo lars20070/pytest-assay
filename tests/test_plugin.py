@@ -781,8 +781,11 @@ def test_pytest_runtest_teardown_runs_evaluation(mocker: MockerFixture, tmp_path
     # Drive the hookwrapper generator
     _drive_hookwrapper(mock_item, None)
 
-    # Evaluator should have been called
-    mock_evaluator.assert_called_once_with(mock_item)
+    # Evaluator should have been called with EvaluatorInput
+    mock_evaluator.assert_called_once()
+    call_args = mock_evaluator.call_args[0][0]
+    assert hasattr(call_args, "baseline_dataset")
+    assert hasattr(call_args, "agent_responses")
     # Should log the result
     mock_logger.info.assert_any_call("Evaluation result: passed=True")
 
@@ -823,8 +826,13 @@ def test_pytest_runtest_teardown_uses_default_evaluator(mocker: MockerFixture, t
     # Drive the hookwrapper generator
     _drive_hookwrapper(mock_item, None)
 
-    # The default BradleyTerryEvaluator instance should have been called
-    mock_bt_evaluator.assert_called_once_with(mock_item)
+    # The default BradleyTerryEvaluator instance should have been called with EvaluatorInput
+    mock_bt_evaluator.assert_called_once()
+    call_args = mock_bt_evaluator.call_args[0][0]
+    assert hasattr(call_args, "baseline_dataset")
+    assert hasattr(call_args, "agent_responses")
+    assert call_args.baseline_dataset == dataset
+    assert call_args.agent_responses == []
     # Should log evaluation completed (no error)
     assert any("Evaluation result" in str(call) for call in mock_logger.info.call_args_list)
 
