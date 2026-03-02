@@ -125,6 +125,7 @@ markers = [
 ]
 filterwarnings = [
     "ignore::RuntimeWarning:unittest.mock",
+    "ignore::RuntimeWarning:rich.text",
 ]
 
 [tool.coverage.run]
