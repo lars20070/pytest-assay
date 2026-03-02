@@ -2,9 +2,9 @@
 
 ## Python Version
 
-- **Required:** Python 3.12 (no 3.13+ features)
-- **Check:** `requires-python = ">=3.12,<3.13"` in pyproject.toml
-- Avoid features introduced in Python 3.13
+- **Required:** Python 3.11, 3.12 or 3.13
+- **Check:** `requires-python = ">=3.11,<3.14"` in pyproject.toml
+- Avoid features introduced in Python 3.14
 
 ## Code Style & Formatting
 
