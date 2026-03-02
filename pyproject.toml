@@ -123,6 +123,9 @@ asyncio_default_fixture_loop_scope = "function" # Use "session" for a single eve
 markers = [
   "ollama: tests requiring a local Ollama instance",
 ]
+filterwarnings = [
+    "ignore::RuntimeWarning:unittest.mock",
+]
 
 [tool.coverage.run]
 branch = true
