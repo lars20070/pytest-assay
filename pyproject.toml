@@ -16,7 +16,9 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Framework :: Pydantic",
     "Framework :: Pydantic :: 2",
     "Operating System :: OS Independent",
@@ -25,7 +27,7 @@ classifiers = [
 readme = "README.md"
 authors = [{ name = "Lars Nilse", email = "l.nilse@dunelm.org.uk" }]
 license = "MIT"
-requires-python = ">=3.12,<3.13"
+requires-python = ">=3.11,<3.14"
 dependencies = [
   "loguru>=0.7.3",
   "pydantic>=2.10.6",
@@ -89,7 +91,7 @@ lint.pydocstyle.convention = "google"
 [tool.pyright]
 # Core Settings
 typeCheckingMode = "basic"  # next step: "standard"
-pythonVersion = "3.12"
+pythonVersion = "3.11"
 venvPath = "."
 venv = ".venv"
 # Paths

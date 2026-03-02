@@ -19,7 +19,7 @@ jobs:
   ci:
     strategy:
       matrix:
-        python-version: ["3.12"]
+        python-version: ["3.11", "3.12", "3.13"]
         uv-version: ["latest"]
         # Only run CI on Linux. Windows and macOS cost 2x and 10x more respectively.
         os: [ubuntu-latest]
@@ -53,11 +53,12 @@ jobs:
         uses: astral-sh/setup-uv@v5.2.2
         with:
           version: ${{ matrix.uv-version }}
+          python-version: ${{ matrix.python-version }}
           enable-cache: true
       - name: Check uv version
         run: uv --version
       - name: Install dependencies
-        run: uv sync
+        run: uv sync --all-groups
       - name: Check installed dependencies
         run: |
           uv run python --version
@@ -81,7 +82,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: pytest-assay-pytest-logs
+          name: pytest-assay-pytest-logs-${{ matrix.python-version }}
           path: pytest-assay.log
       - name: Upload coverage report to Codecov
         uses: codecov/codecov-action@v5
