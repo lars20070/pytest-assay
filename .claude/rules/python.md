@@ -87,9 +87,9 @@ uv run pyright .
 **Important:** Always run pyright to catch type errors. This must pass before committing any Python code.
 
 ### Modern Syntax
-Use Python 3.12+ type syntax:
+Use Python 3.11+ type syntax:
 ```python
-# Good (3.12+)
+# Good (3.11+)
 def process(items: list[str]) -> dict[str, int]:
     ...
 

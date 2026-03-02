@@ -40,7 +40,7 @@
     "errorHandling": "Use tenacity for retries, loguru for logging",
     "testMarkers": "Use pytest markers: 'ollama'",
     "docstrings": "Use Google-style docstrings without backticks",
-    "typeHints": "Required for all functions, use Python 3.12+ syntax",
+    "typeHints": "Required for all functions, use Python 3.11+ syntax",
     "imports": "Standard library, then third-party, then local imports"
   },
   "architecture": {
