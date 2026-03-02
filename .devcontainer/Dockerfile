@@ -17,8 +17,8 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # Trixie is a testing distribution. Certain versions of packages might disappear from mirrors. Therefore we do not pin versions here.
 # Remove yarn source list for now (GPG key missing, causes apt-get update to fail)
 # hadolint ignore=DL3008
-RUN --mount=type=cache,target=/var/cache/apt \
-  --mount=type=cache,target=/var/lib/apt/lists \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+  --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
   rm -f /etc/apt/sources.list.d/yarn.list \
   && apt-get update \
   && apt-get install -y --no-install-recommends \

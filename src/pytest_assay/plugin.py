@@ -14,7 +14,7 @@ from pytest import Config, Function, Item, Parser
 from .evaluators.bradleyterry import BradleyTerryEvaluator  # noqa: F401
 from .evaluators.pairwise import PairwiseEvaluator  # noqa: F401
 from .logger import logger
-from .models import AssayContext, Evaluator, Readout  # noqa: F401
+from .models import AssayContext, Evaluator, EvaluatorInput, Readout  # noqa: F401
 
 # Modes for the assay plugin. "evaluate" is the default mode.
 ASSAY_MODES = ("evaluate", "new_baseline")
@@ -81,7 +81,8 @@ def _serialize_baseline(item: Item, assay: AssayContext) -> None:
         return
 
     for case, response in zip(cases, responses, strict=True):
-        case.expected_output = response.output if response.output is not None else ""
+        output = str(response.output) if response.output is not None else ""
+        case.expected_output = output.strip('"')
 
     logger.info(f"Serializing assay dataset to {assay.path}")
     assay.path.parent.mkdir(parents=True, exist_ok=True)
@@ -106,9 +107,15 @@ def _run_evaluation(item: Item, assay: AssayContext) -> None:
         logger.error(f"Invalid evaluator type: {type(evaluator)}. Expected callable.")
         return
 
+    # Build EvaluatorInput from stash
+    eval_input = EvaluatorInput(
+        baseline_dataset=item.stash.get(BASELINE_DATASET_KEY, None),
+        agent_responses=item.stash.get(AGENT_RESPONSES_KEY, []),
+    )
+
     # Run the evaluator asynchronously
     try:
-        readout = asyncio.run(evaluator(item))
+        readout = asyncio.run(evaluator(eval_input))
         logger.info(f"Evaluation result: passed={readout.passed}")
 
         # Serialize the readout
@@ -301,7 +308,9 @@ def pytest_runtest_teardown(item: Item, nextitem: Item | None) -> Generator[None
         item: The pytest test item being torn down.
         nextitem: The next test item (if any).
     """
-    if _is_assay(item):
+    # Only run teardown for assay tests where the call phase actually ran.
+    # pytest_runtest_call sets AGENT_RESPONSES_KEY; if absent, the test was skipped.
+    if _is_assay(item) and AGENT_RESPONSES_KEY in item.stash:
         assay: AssayContext | None = item.funcargs.get("context")  # type: ignore[attr-defined]
         if assay is not None:
             if assay.assay_mode == "new_baseline":

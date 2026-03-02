@@ -97,6 +97,8 @@
         "ms-vscode.vscode-copilot-data-analysis",
         "AutomataLabs.copilot-mcp",
         "CodeRabbit.coderabbit-vscode",
+        // Claude
+        "anthropic.claude-code",
         // Spell checker
         "streetsidesoftware.code-spell-checker",
         // logging

@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import inspect
-from pathlib import Path
 from typing import TYPE_CHECKING, Any
 from unittest.mock import AsyncMock
 
@@ -13,12 +12,9 @@ from pydantic_ai.agent import AgentRunResult
 from pydantic_ai.models.openai import OpenAIChatModel
 from pydantic_ai.providers.openai import OpenAIProvider
 from pydantic_evals import Case, Dataset
-from pytest import Function
 
-import pytest_assay.plugin
 from pytest_assay.evaluators.pairwise import EVALUATION_INSTRUCTIONS, PairwiseEvaluator
-from pytest_assay.models import AssayContext, Readout
-from pytest_assay.plugin import AGENT_RESPONSES_KEY, BASELINE_DATASET_KEY
+from pytest_assay.models import EvaluatorInput, Readout
 
 if TYPE_CHECKING:
     from pytest_mock import MockerFixture
@@ -80,22 +76,14 @@ class TestPairwiseEvaluator:
     async def test_call_no_pairs(self, mocker: MockerFixture) -> None:
         """Test __call__ with empty baseline and novel lists returns passed=False."""
         evaluator = PairwiseEvaluator()
-        mock_item = mocker.MagicMock(spec=Function)
-        mock_item.funcargs = {
-            "context": AssayContext(
-                dataset=Dataset[dict[str, str], type[None], Any](cases=[]),
-                path=Path("/tmp/test.json"),
-                assay_mode="evaluate",
-            )
-        }
-        mock_item.stash = {
-            AGENT_RESPONSES_KEY: [],
-            BASELINE_DATASET_KEY: Dataset[dict[str, str], type[None], Any](cases=[]),
-        }
+        eval_input = EvaluatorInput(
+            baseline_dataset=Dataset[dict[str, str], type[None], Any](cases=[]),
+            agent_responses=[],
+        )
 
         mocker.patch("pytest_assay.evaluators.pairwise.logger")
 
-        result = await evaluator(mock_item)
+        result = await evaluator(eval_input)
 
         assert isinstance(result, Readout)
         assert result.passed is False
@@ -120,12 +108,10 @@ class TestPairwiseEvaluator:
         mock_response2 = mocker.MagicMock(spec=AgentRunResult)
         mock_response2.output = "novel output 2"
 
-        mock_item = mocker.MagicMock(spec=Function)
-        mock_item.funcargs = {"context": AssayContext(dataset=dataset, path=Path("/tmp/test.json"), assay_mode="evaluate")}
-        mock_item.stash = {
-            AGENT_RESPONSES_KEY: [mock_response1, mock_response2],
-            pytest_assay.plugin.BASELINE_DATASET_KEY: dataset,
-        }
+        eval_input = EvaluatorInput(
+            baseline_dataset=dataset,
+            agent_responses=[mock_response1, mock_response2],
+        )
 
         mocker.patch("pytest_assay.evaluators.pairwise.logger")
 
@@ -134,7 +120,7 @@ class TestPairwiseEvaluator:
         mock_run_result.output = "B"
         mocker.patch.object(evaluator.agent, "run", new_callable=AsyncMock, return_value=mock_run_result)
 
-        result = await evaluator(mock_item)
+        result = await evaluator(eval_input)
 
         assert isinstance(result, Readout)
         assert result.passed is True
@@ -156,12 +142,10 @@ class TestPairwiseEvaluator:
         mock_response = mocker.MagicMock(spec=AgentRunResult)
         mock_response.output = "novel output"
 
-        mock_item = mocker.MagicMock(spec=Function)
-        mock_item.funcargs = {"context": AssayContext(dataset=dataset, path=Path("/tmp/test.json"), assay_mode="evaluate")}
-        mock_item.stash = {
-            AGENT_RESPONSES_KEY: [mock_response],
-            pytest_assay.plugin.BASELINE_DATASET_KEY: dataset,
-        }
+        eval_input = EvaluatorInput(
+            baseline_dataset=dataset,
+            agent_responses=[mock_response],
+        )
 
         mocker.patch("pytest_assay.evaluators.pairwise.logger")
 
@@ -170,7 +154,7 @@ class TestPairwiseEvaluator:
         mock_run_result.output = "A"
         mocker.patch.object(evaluator.agent, "run", new_callable=AsyncMock, return_value=mock_run_result)
 
-        result = await evaluator(mock_item)
+        result = await evaluator(eval_input)
 
         assert isinstance(result, Readout)
         assert result.passed is False
@@ -194,12 +178,10 @@ class TestPairwiseEvaluator:
         mock_response2 = mocker.MagicMock(spec=AgentRunResult)
         mock_response2.output = "novel 2"
 
-        mock_item = mocker.MagicMock(spec=Function)
-        mock_item.funcargs = {"context": AssayContext(dataset=dataset, path=Path("/tmp/test.json"), assay_mode="evaluate")}
-        mock_item.stash = {
-            AGENT_RESPONSES_KEY: [mock_response1, mock_response2],
-            pytest_assay.plugin.BASELINE_DATASET_KEY: dataset,
-        }
+        eval_input = EvaluatorInput(
+            baseline_dataset=dataset,
+            agent_responses=[mock_response1, mock_response2],
+        )
 
         mocker.patch("pytest_assay.evaluators.pairwise.logger")
 
@@ -210,7 +192,7 @@ class TestPairwiseEvaluator:
         mock_result_a.output = "A"
         mocker.patch.object(evaluator.agent, "run", new_callable=AsyncMock, side_effect=[mock_result_b, mock_result_a])
 
-        result = await evaluator(mock_item)
+        result = await evaluator(eval_input)
 
         assert isinstance(result, Readout)
         assert result.passed is False
@@ -227,17 +209,15 @@ class TestPairwiseEvaluator:
         ]
         dataset = Dataset[dict[str, str], type[None], Any](cases=cases)
 
-        mock_item = mocker.MagicMock(spec=Function)
-        mock_item.funcargs = {"context": AssayContext(dataset=dataset, path=Path("/tmp/test.json"), assay_mode="evaluate")}
-        mock_item.stash = {
-            AGENT_RESPONSES_KEY: [],  # No novel responses
-            pytest_assay.plugin.BASELINE_DATASET_KEY: dataset,
-        }
+        eval_input = EvaluatorInput(
+            baseline_dataset=dataset,
+            agent_responses=[],  # No novel responses
+        )
 
         mocker.patch("pytest_assay.evaluators.pairwise.logger")
 
         with pytest.raises(AssertionError, match="Mismatch in response counts"):
-            await evaluator(mock_item)
+            await evaluator(eval_input)
 
     @pytest.mark.asyncio
     async def test_call_skips_none_output(self, mocker: MockerFixture) -> None:
@@ -250,17 +230,15 @@ class TestPairwiseEvaluator:
         mock_response = mocker.MagicMock(spec=AgentRunResult)
         mock_response.output = None  # None output should be skipped
 
-        mock_item = mocker.MagicMock(spec=Function)
-        mock_item.funcargs = {"context": AssayContext(dataset=dataset, path=Path("/tmp/test.json"), assay_mode="evaluate")}
-        mock_item.stash = {
-            AGENT_RESPONSES_KEY: [mock_response],
-            BASELINE_DATASET_KEY: dataset,
-        }
+        eval_input = EvaluatorInput(
+            baseline_dataset=dataset,
+            agent_responses=[mock_response],
+        )
 
         mocker.patch("pytest_assay.evaluators.pairwise.logger")
 
         # 0 baseline, 0 novel (the None was skipped) → no mismatch, passed=False
-        result = await evaluator(mock_item)
+        result = await evaluator(eval_input)
 
         assert isinstance(result, Readout)
         assert result.passed is False
@@ -280,12 +258,10 @@ class TestPairwiseEvaluator:
         mock_response = mocker.MagicMock(spec=AgentRunResult)
         mock_response.output = "miso caramel"
 
-        mock_item = mocker.MagicMock(spec=Function)
-        mock_item.funcargs = {"context": AssayContext(dataset=dataset, path=Path("/tmp/test.json"), assay_mode="evaluate")}
-        mock_item.stash = {
-            AGENT_RESPONSES_KEY: [mock_response],
-            BASELINE_DATASET_KEY: dataset,
-        }
+        eval_input = EvaluatorInput(
+            baseline_dataset=dataset,
+            agent_responses=[mock_response],
+        )
 
         mocker.patch("pytest_assay.evaluators.pairwise.logger")
 
@@ -293,7 +269,7 @@ class TestPairwiseEvaluator:
         mock_run_result.output = "A"
         mock_run = mocker.patch.object(evaluator.agent, "run", new_callable=AsyncMock, return_value=mock_run_result)
 
-        await evaluator(mock_item)
+        await evaluator(eval_input)
 
         call_kwargs = mock_run.call_args.kwargs
         prompt = call_kwargs["user_prompt"]

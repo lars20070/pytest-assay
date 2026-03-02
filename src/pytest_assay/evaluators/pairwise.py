@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import textwrap
-from typing import TYPE_CHECKING, Literal
+from typing import Literal
 
 from pydantic_ai import Agent
 from pydantic_ai.models.openai import OpenAIChatModel
@@ -11,12 +11,7 @@ from pydantic_ai.settings import ModelSettings
 
 from pytest_assay.config import config
 from pytest_assay.logger import logger
-
-if TYPE_CHECKING:
-    from pytest import Item
-
-    from pytest_assay.models import Readout
-
+from pytest_assay.models import EvaluatorInput, Readout
 
 EVALUATION_INSTRUCTIONS = """
 You are presented with a question and two possible answers A and B. Evaluate carefully whether answer A or answer B is the better reply.
@@ -116,33 +111,28 @@ class PairwiseEvaluator:
         )
         self.criterion = criterion
 
-    async def __call__(self, item: Item) -> Readout:
+    async def __call__(self, input: EvaluatorInput) -> Readout:
         """
         Run pairwise comparison of baseline and novel responses.
 
         Args:
-            item: The pytest test item with assay context and captured responses.
+            input: The evaluator input with baseline dataset and agent responses.
 
         Returns:
             Readout with passed status and details.
         """
-        from pytest_assay.models import Readout  # noqa: PLC0415
-        from pytest_assay.plugin import AGENT_RESPONSES_KEY, BASELINE_DATASET_KEY  # noqa: PLC0415
-
         logger.info("Running Pairwise evaluation on captured agent responses")
 
         # 1. Baseline responses from previously serialized assay dataset
         responses_baseline: list[str] = []
-        baseline_dataset = item.stash.get(BASELINE_DATASET_KEY, None)
-        if baseline_dataset is not None:
-            for idx, case in enumerate(baseline_dataset.cases):
+        if input.baseline_dataset is not None:
+            for idx, case in enumerate(input.baseline_dataset.cases):
                 logger.debug(f"Baseline response #{idx}: {repr(case.expected_output)[:100]}")
                 responses_baseline.append(str(case.expected_output))
 
         # 2. Novel responses from current test run
         responses_novel: list[str] = []
-        responses = item.stash.get(AGENT_RESPONSES_KEY, [])
-        for idx, response in enumerate(responses):
+        for idx, response in enumerate(input.agent_responses):
             if response.output is None:
                 logger.warning(f"Response #{idx} has None output.")
                 continue

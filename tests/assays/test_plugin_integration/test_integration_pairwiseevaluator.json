@@ -7,7 +7,7 @@
         "topic": "pangolin trafficking networks"
       },
       "metadata": null,
-      "expected_output": "\"pangolin trafficking networks international trade\"",
+      "expected_output": "pangolin trafficking networks international trade",
       "evaluators": []
     },
     {
@@ -16,7 +16,7 @@
         "topic": "molecular gastronomy"
       },
       "metadata": null,
-      "expected_output": "\"definition and techniques of molecular gastronomy\"",
+      "expected_output": "definition and techniques of molecular gastronomy",
       "evaluators": []
     },
     {
@@ -25,7 +25,7 @@
         "topic": "dark kitchen economics"
       },
       "metadata": null,
-      "expected_output": "\"economics of dark kitchens delivery-only restaurants industry analysis\"",
+      "expected_output": "economics of dark kitchens delivery-only restaurants industry analysis",
       "evaluators": []
     },
     {
@@ -34,7 +34,7 @@
         "topic": "kintsugi philosophy"
       },
       "metadata": null,
-      "expected_output": "\"meaning and application of kintsugi philosophy\"",
+      "expected_output": "meaning and application of kintsugi philosophy",
       "evaluators": []
     },
     {
@@ -43,7 +43,7 @@
         "topic": "nano-medicine delivery systems"
       },
       "metadata": null,
-      "expected_output": "\"nano medicine delivery systems applications and challenges\"",
+      "expected_output": "nano medicine delivery systems applications and challenges",
       "evaluators": []
     },
     {
@@ -52,7 +52,7 @@
         "topic": "Streisand effect dynamics"
       },
       "metadata": null,
-      "expected_output": "\"mechanics and impact of the Streisand effect in online environments\"",
+      "expected_output": "mechanics and impact of the Streisand effect in online environments",
       "evaluators": []
     },
     {
@@ -61,7 +61,7 @@
         "topic": "Anne Brorhilker"
       },
       "metadata": null,
-      "expected_output": "\"Anne Brorhilker biography and career achievements\"",
+      "expected_output": "Anne Brorhilker biography and career achievements",
       "evaluators": []
     },
     {
@@ -70,7 +70,7 @@
         "topic": "bioconcrete self-healing"
       },
       "metadata": null,
-      "expected_output": "\"self-healing bioconcrete mechanisms and applications\"",
+      "expected_output": "self-healing bioconcrete mechanisms and applications",
       "evaluators": []
     },
     {
@@ -79,7 +79,7 @@
         "topic": "bacteriophage therapy revival"
       },
       "metadata": null,
-      "expected_output": "\"revival of bacteriophage therapy in modern medicine\"",
+      "expected_output": "revival of bacteriophage therapy in modern medicine",
       "evaluators": []
     },
     {
@@ -88,7 +88,7 @@
         "topic": "Habsburg jaw genetics"
       },
       "metadata": null,
-      "expected_output": "\"Habsburg jaw genetic causes and inheritance\"",
+      "expected_output": "Habsburg jaw genetic causes and inheritance",
       "evaluators": []
     }
   ],

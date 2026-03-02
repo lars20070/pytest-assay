@@ -5,8 +5,15 @@ from pathlib import Path
 from typing import Any, Protocol
 
 from pydantic import BaseModel, Field
+from pydantic_ai.agent import AgentRunResult
 from pydantic_evals import Dataset
-from pytest import Item
+
+
+class EvaluatorInput(BaseModel):
+    """Input data passed to evaluators."""
+
+    baseline_dataset: Dataset | None
+    agent_responses: list[AgentRunResult[Any]]
 
 
 class Readout(BaseModel):
@@ -34,7 +41,7 @@ class Evaluator(Protocol):
     Evaluator implementations configure themselves via __init__.
     """
 
-    def __call__(self, item: Item) -> Coroutine[Any, Any, Readout]: ...
+    def __call__(self, input: EvaluatorInput) -> Coroutine[Any, Any, Readout]: ...
 
 
 class AssayContext(BaseModel):

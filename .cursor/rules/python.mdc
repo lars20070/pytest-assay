@@ -6,9 +6,9 @@ alwaysApply: false
 
 ## Python Version
 
-- **Required:** Python 3.12 (no 3.13+ features)
-- **Check:** `requires-python = ">=3.12,<3.13"` in pyproject.toml
-- Avoid features introduced in Python 3.13
+- **Required:** Python 3.11, 3.12 or 3.13
+- **Check:** `requires-python = ">=3.11,<3.14"` in pyproject.toml
+- Avoid features introduced in Python 3.14
 
 ## Code Style & Formatting
 
@@ -91,9 +91,9 @@ uv run pyright .
 **Important:** Always run pyright to catch type errors. This must pass before committing any Python code.
 
 ### Modern Syntax
-Use Python 3.12+ type syntax:
+Use Python 3.11+ type syntax:
 ```python
-# Good (3.12+)
+# Good (3.11+)
 def process(items: list[str]) -> dict[str, int]:
     ...
 

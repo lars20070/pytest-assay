@@ -13,12 +13,113 @@ from __future__ import annotations as _annotations
 import json
 from pathlib import Path
 from typing import Any
+from unittest.mock import MagicMock
 
 import pytest
 from pydantic import ValidationError
+from pydantic_ai.agent import AgentRunResult
 from pydantic_evals import Case, Dataset
 
-from pytest_assay.models import AssayContext, Evaluator, Readout
+from pytest_assay.models import AssayContext, Evaluator, EvaluatorInput, Readout
+
+
+class TestEvaluatorInput:
+    """Tests for the EvaluatorInput model."""
+
+    def test_with_none_baseline(self) -> None:
+        """Test creation with no baseline dataset."""
+        mock_response = MagicMock(spec=AgentRunResult)
+        mock_response.output = "some output"
+
+        eval_input = EvaluatorInput(
+            baseline_dataset=None,
+            agent_responses=[mock_response],
+        )
+
+        assert eval_input.baseline_dataset is None
+        assert len(eval_input.agent_responses) == 1
+        assert eval_input.agent_responses[0].output == "some output"
+
+    def test_with_baseline_dataset(self) -> None:
+        """Test creation with a populated baseline dataset."""
+        cases: list[Case[dict[str, str], type[None], Any]] = [
+            Case(name="case_1", inputs={"query": "hello"}),
+            Case(name="case_2", inputs={"query": "world"}),
+        ]
+        dataset = Dataset[dict[str, str], type[None], Any](cases=cases)
+
+        mock_response = MagicMock(spec=AgentRunResult)
+        mock_response.output = "response text"
+
+        eval_input = EvaluatorInput(
+            baseline_dataset=dataset,
+            agent_responses=[mock_response],
+        )
+
+        assert eval_input.baseline_dataset is not None
+        assert len(eval_input.baseline_dataset.cases) == 2
+        assert eval_input.baseline_dataset.cases[0].name == "case_1"
+
+    def test_empty_responses(self) -> None:
+        """Test creation with an empty agent_responses list."""
+        eval_input = EvaluatorInput(
+            baseline_dataset=None,
+            agent_responses=[],
+        )
+
+        assert eval_input.agent_responses == []
+
+    def test_multiple_responses(self) -> None:
+        """Test creation with multiple agent responses."""
+        responses = []
+        for i in range(3):
+            mock = MagicMock(spec=AgentRunResult)
+            mock.output = f"output {i}"
+            responses.append(mock)
+
+        eval_input = EvaluatorInput(
+            baseline_dataset=None,
+            agent_responses=responses,
+        )
+
+        assert len(eval_input.agent_responses) == 3
+        assert eval_input.agent_responses[0].output == "output 0"
+        assert eval_input.agent_responses[2].output == "output 2"
+
+    def test_missing_required_fields(self) -> None:
+        """Test that omitting required fields raises ValidationError."""
+        with pytest.raises(ValidationError):
+            EvaluatorInput()  # type: ignore[call-arg]
+
+    def test_missing_agent_responses(self) -> None:
+        """Test that omitting agent_responses raises ValidationError."""
+        with pytest.raises(ValidationError):
+            EvaluatorInput(baseline_dataset=None)  # type: ignore[call-arg]
+
+    def test_missing_baseline_dataset(self) -> None:
+        """Test that omitting baseline_dataset raises ValidationError."""
+        with pytest.raises(ValidationError):
+            EvaluatorInput(agent_responses=[])  # type: ignore[call-arg]
+
+    def test_model_fields(self) -> None:
+        """Test EvaluatorInput has the expected field definitions."""
+        fields = EvaluatorInput.model_fields
+
+        assert "baseline_dataset" in fields
+        assert "agent_responses" in fields
+        assert len(fields) == 2
+
+    def test_with_none_output_response(self) -> None:
+        """Test creation with a response whose output is None."""
+        mock_response = MagicMock(spec=AgentRunResult)
+        mock_response.output = None
+
+        eval_input = EvaluatorInput(
+            baseline_dataset=None,
+            agent_responses=[mock_response],
+        )
+
+        assert eval_input.agent_responses[0].output is None
 
 
 class TestReadout:

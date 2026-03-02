@@ -4,7 +4,7 @@ from __future__ import annotations
 import math
 import random
 from collections.abc import Awaitable, Callable
-from typing import TYPE_CHECKING, Any, Literal
+from typing import Any, Literal
 
 import choix
 import numpy as np
@@ -16,12 +16,7 @@ from pydantic_ai.settings import ModelSettings
 
 from pytest_assay.config import config
 from pytest_assay.logger import logger
-
-if TYPE_CHECKING:
-    from pytest import Item
-
-    from pytest_assay.models import Readout
-
+from pytest_assay.models import EvaluatorInput, Readout
 
 EVALUATION_INSTRUCTIONS = """
 You are presented with a question and two possible answers A and B. Evaluate carefully whether answer A or answer B is the better reply.
@@ -471,35 +466,30 @@ class BradleyTerryEvaluator:
         self.criterion = criterion
         self.max_standard_deviation = max_standard_deviation
 
-    async def __call__(self, item: Item) -> Readout:
+    async def __call__(self, input: EvaluatorInput) -> Readout:
         """
         Run Bradley-Terry tournament on baseline and novel responses.
 
         Args:
-            item: The pytest test item with assay context and captured responses.
+            input: The evaluator input with baseline dataset and agent responses.
 
         Returns:
             Readout with passed status and details.
         """
-        from pytest_assay.models import Readout  # noqa: PLC0415
-        from pytest_assay.plugin import AGENT_RESPONSES_KEY, BASELINE_DATASET_KEY  # noqa: PLC0415
-
         logger.info("Running Bradley-Terry evaluation on captured agent responses")
 
         # Prepare the list of all players, baseline and novel
         players: list[EvalPlayer] = []
 
         # 1. Baseline players from previously serialized assay dataset
-        baseline_dataset = item.stash.get(BASELINE_DATASET_KEY, None)
         baseline_case_count = 0
-        if baseline_dataset is not None:
-            for idx, case in enumerate(baseline_dataset.cases):
+        if input.baseline_dataset is not None:
+            for idx, case in enumerate(input.baseline_dataset.cases):
                 players.append(EvalPlayer(idx=idx, item=str(case.expected_output)))
-            baseline_case_count = len(baseline_dataset.cases)
+            baseline_case_count = len(input.baseline_dataset.cases)
 
         # 2. Novel players from current test run
-        responses = item.stash.get(AGENT_RESPONSES_KEY, [])
-        for idx, response in enumerate(responses):
+        for idx, response in enumerate(input.agent_responses):
             if response.output is None:
                 logger.warning(f"Response #{idx} has None output.")
                 continue

@@ -13,13 +13,12 @@ on:
 
 permissions:
   contents: read
-  packages: write
 
 jobs:
   ci:
     strategy:
       matrix:
-        python-version: ["3.12"]
+        python-version: ["3.11", "3.12", "3.13"]
         uv-version: ["latest"]
         # Only run CI on Linux. Windows and macOS cost 2x and 10x more respectively.
         os: [ubuntu-latest]
@@ -32,18 +31,6 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4.2.0
-      - name: Free Disk Space on GitHub Actions runner
-        # Runners come with many preinstalled tools that we don't need for our build.
-        # This action removes them to free up disk space for the following steps, such as the heavy devcontainer build.
-        uses: jlumbroso/free-disk-space@v1.3.1
-        with:
-          tool-cache: false
-          android: true
-          dotnet: true
-          haskell: true
-          large-packages: true
-          docker-images: false
-          swap-storage: true
       - name: Create .env file
         # Define in GitHub repository: Settings -> Secrets and variables -> Actions -> New repository secret
         run: |
@@ -53,11 +40,12 @@ jobs:
         uses: astral-sh/setup-uv@v5.2.2
         with:
           version: ${{ matrix.uv-version }}
+          python-version: ${{ matrix.python-version }}
           enable-cache: true
       - name: Check uv version
         run: uv --version
       - name: Install dependencies
-        run: uv sync
+        run: uv sync --all-groups
       - name: Check installed dependencies
         run: |
           uv run python --version
@@ -81,7 +69,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: pytest-assay-pytest-logs
+          name: pytest-assay-pytest-logs-${{ matrix.python-version }}
           path: pytest-assay.log
       - name: Upload coverage report to Codecov
         uses: codecov/codecov-action@v5
@@ -90,18 +78,46 @@ jobs:
           files: ./coverage.xml
           fail_ci_if_error: false
           token: ${{ secrets.CODECOV_TOKEN }}
+  build-devcontainer:
+    runs-on: ubuntu-latest
+    needs: [ci]
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4.2.0
+      - name: Free Disk Space on GitHub Actions runner
+        # Runners come with many preinstalled tools that we don't need for our build.
+        # This action removes them to free up disk space for the heavy devcontainer build.
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          tool-cache: false
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: false
+          swap-storage: true
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set up QEMU for multi-platform builds
+        # The GitHub Actions runner is an AMD64 machine. To build ARM64 images, we need to set up QEMU emulation.
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        # Buildx replaces 'docker build' with a more powerful builder that supports multi-platform builds.
+        uses: docker/setup-buildx-action@v3
       - name: Build and run dev container task
         uses: devcontainers/ci@v0.3
         with:
           imageName: ghcr.io/lars20070/pytest-assay-devcontainer
           cacheFrom: ghcr.io/lars20070/pytest-assay-devcontainer
           imageTag: latest,${{ github.sha }}
+          platform: linux/amd64,linux/arm64
           push: filter
           # refFilterForPush: refs/heads/**
           refFilterForPush: refs/heads/master
@@ -122,7 +138,7 @@ jobs:
       id-token: write
       contents: read
     steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v5
+      - uses: actions/checkout@v4.2.0
+      - uses: astral-sh/setup-uv@v5.2.2
       - run: uv build
       - run: uv publish
