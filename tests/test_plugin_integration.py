@@ -6,6 +6,8 @@ These tests require a local Ollama instance and are marked with @pytest.mark.oll
 They generate search queries for research topics and evaluate them using different strategies:
 1. PairwiseEvaluator: Compares baseline vs novel responses directly
 2. BradleyTerryEvaluator: Ranks all responses using the Bradley-Terry model
+3. LengthEvaluator: Checks whether novel responses are longer than baseline responses. LengthEvaluator is a custom user-defined evaluator and
+   not part of the pytest-assay package, demonstrating how users can implement their own evaluation logic.
 """
 
 from __future__ import annotations as _annotations
@@ -20,6 +22,7 @@ from pydantic_ai.providers.openai import OpenAIProvider
 from pydantic_evals import Case, Dataset
 
 from pytest_assay.logger import logger
+from pytest_assay.models import EvaluatorInput, Readout
 from pytest_assay.plugin import BradleyTerryEvaluator, PairwiseEvaluator
 
 if TYPE_CHECKING:
@@ -152,4 +155,78 @@ async def test_integration_bradleyterryevaluator(context: AssayContext, model_se
         model_settings: Deterministic model settings for reproducible tests.
     """
     logger.info("Integration test for assay pytest plugin with BradleyTerryEvaluator.")
+    await _run_query_generation(context, model_settings)
+
+
+class LengthEvaluator:
+    """
+    Evaluates test outputs by comparing the length of novel responses to baseline responses.
+    As long as the majority of novel responses are longer than their corresponding baseline responses, the test passes.
+    """
+
+    async def __call__(self, input: EvaluatorInput) -> Readout:
+        """
+        Run pairwise comparison of baseline and novel responses.
+
+        Args:
+            input: The evaluator input with baseline dataset and agent responses.
+
+        Returns:
+            Readout with passed status and details.
+        """
+        logger.info("Running length evaluation on captured agent responses")
+
+        if input.baseline_dataset is None:
+            raise AssertionError("Baseline dataset is required for LengthEvaluator.")
+
+        # 1. Calculate lengths of baseline and novel responses
+        lengths_baseline: list[int] = [len(str(case.expected_output)) for case in input.baseline_dataset.cases]
+        lengths_novel: list[int] = []
+        for idx, response in enumerate(input.agent_responses):
+            if response.output is None:
+                logger.warning(f"Response #{idx} has None output.")
+                lengths_novel.append(0)
+                continue
+            lengths_novel.append(len(str(response.output)))
+
+        # 2. Check for length mismatch
+        if len(lengths_baseline) != len(lengths_novel):
+            error_msg = f"Mismatch in response counts: {len(lengths_baseline)} baseline vs {len(lengths_novel)} novel"
+            logger.error(error_msg)
+            raise AssertionError(error_msg)
+
+        # 3. Determine wins for novel responses based on length comparison
+        wins_novel = [novel > baseline for baseline, novel in zip(lengths_baseline, lengths_novel, strict=True)]
+        count_wins = sum(wins_novel)
+        count_losses = len(wins_novel) - count_wins
+
+        return Readout(
+            passed=count_wins > count_losses,
+            details={
+                "test_cases_count": len(lengths_baseline),
+                "lengths_baseline": lengths_baseline,
+                "lengths_novel": lengths_novel,
+            },
+        )
+
+
+@pytest.mark.ollama
+@pytest.mark.assay(
+    generator=generate_evaluation_cases,
+    evaluator=LengthEvaluator(),
+)
+@pytest.mark.asyncio
+async def test_integration_lengthevaluator(context: AssayContext, model_settings: ModelSettings) -> None:
+    """
+    Integration test for a custom evaluator.
+    Here we simply demonstrate how to run an assay with a user-defined evaluator which is not shipped with the pytest-assay package.
+
+    An agent generates search queries for various research topics.
+    LengthEvaluator then checks whether generated queries are longer than baseline queries.
+
+    Args:
+        context: The assay context containing the evaluation dataset context.dataset and other information.
+        model_settings: Deterministic model settings for reproducible tests.
+    """
+    logger.info("Integration test for assay pytest plugin with LengthEvaluator.")
     await _run_query_generation(context, model_settings)
