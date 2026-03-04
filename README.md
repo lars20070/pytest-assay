@@ -57,7 +57,7 @@ uv run pytest tests/test_evaluation.py --assay-mode=new_baseline  # Generates ba
 uv run pytest tests/test_evaluation.py --assay-mode=evaluate      # Generates readout report test_query_generation.readout.json
 ```
 
-For further examples, please run the integration tests in [`tests/test_plugin_integration.py`](https://github.com/lars20070/pytest-assay/blob/master/tests/test_plugin_integration.py).
+For full examples, please run the integration tests in [`tests/test_plugin_integration.py`](https://github.com/lars20070/pytest-assay/blob/master/tests/test_plugin_integration.py).
 ```bash
 uv run pytest --log-cli-level=DEBUG tests/test_plugin_integration.py | grep pytest_assay
 ```
