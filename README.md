@@ -15,7 +15,7 @@
 [![PyPI](https://img.shields.io/pypi/v/pytest-assay)](https://pypi.org/project/pytest-assay/)
 [![License](https://img.shields.io/github/license/lars20070/pytest-assay)](https://github.com/lars20070/pytest-assay/blob/master/LICENSE)
 
-*pytest-assay* is a framework for the evaluation of [Pydantic AI](https://ai.pydantic.dev) agents. By adding the `@pytest.mark.assay` decorator to a test, you can run an *assay* resulting in a *readout* report which contains the evaluation. The assay compares the current agent responses against pre-recorded baseline responses, e.g. from the `main` branch. The implementation is using pytest hooks which capture [`Agent.run()`](https://ai.pydantic.dev/agent) responses inside the test. Below is a minimal example which evaluates the creativity of a search query generation. For a fully functional example see [`tests/test_plugin_integration.py`](https://github.com/lars20070/pytest-assay/blob/master/tests/test_plugin_integration.py).
+*pytest-assay* is a framework for the evaluation of [Pydantic AI](https://ai.pydantic.dev) agents. By adding the `@pytest.mark.assay` decorator to a test, you can run an *assay* resulting in a *readout* report which contains the evaluation. The assay compares the current agent responses against pre-recorded baseline responses, e.g. from the `main` branch. The implementation is using pytest hooks which capture [`Agent.run()`](https://ai.pydantic.dev/agent) responses inside the test. Below is a minimal example which evaluates the creativity of a search query generation.
 
 ```python
 def generate_evaluation_cases():
@@ -55,4 +55,9 @@ The baseline data are generated in `new_baseline` mode, and the readout report i
 ```bash
 uv run pytest tests/test_evaluation.py --assay-mode=new_baseline  # Generates baseline data test_query_generation.json
 uv run pytest tests/test_evaluation.py --assay-mode=evaluate      # Generates readout report test_query_generation.readout.json
+```
+
+For further examples, please run the integration tests in [`tests/test_plugin_integration.py`](https://github.com/lars20070/pytest-assay/blob/master/tests/test_plugin_integration.py).
+```bash
+uv run pytest --log-cli-level=DEBUG tests/test_plugin_integration.py | grep pytest_assay
 ```

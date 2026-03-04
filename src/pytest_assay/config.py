@@ -12,7 +12,6 @@ class Config(BaseSettings):
 
     ollama_base_url: str = Field(default="http://localhost:11434", description="Base URL for the local Ollama server.")
     ollama_model: str = Field(default="qwen2.5:14b", description="Default Ollama model.")
-    logfire_token: str | None = None
 
     model_config = SettingsConfigDict(
         env_file=".env",

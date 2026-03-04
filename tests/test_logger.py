@@ -1,33 +1,25 @@
-#!/usr/bin/env python3
-
-import logfire
-from loguru import logger as loguru_base_logger
+import logging
 
 from pytest_assay.logger import logger
 
 
-def test_logger_is_loguru_instance() -> None:
-    """Test that logger is a Loguru logger."""
-    assert type(logger) is type(loguru_base_logger)
+def test_logger_is_stdlib_logger() -> None:
+    """Test that logger is a stdlib logging.Logger."""
+    assert isinstance(logger, logging.Logger)
 
 
-def test_loguru_file_handler() -> None:
-    """Test that Loguru has a file handler configured."""
-    # The default handler (id=0) was removed, so a file handler should exist
-    handlers = logger._core.handlers  # type: ignore[attr-defined]
-    assert len(handlers) > 0
-
-    # At least one handler should write to a file with the expected name
-    sink_paths = [getattr(h._sink, "_path", "") for h in handlers.values()]  # type: ignore[attr-defined]
-    assert any("pytest-assay.log" in str(p) for p in sink_paths)
+def test_logger_name() -> None:
+    """Test that the logger has the correct name."""
+    assert logger.name == "pytest_assay"
 
 
-def test_loguru_logging() -> None:
-    """Test that Loguru can write log messages without error."""
-    logger.info("Test message from test_loguru_logging")
-    logger.debug("Debug message from test_loguru_logging")
+def test_null_handler_registered() -> None:
+    """Test that NullHandler is registered on the pytest_assay logger."""
+    root = logging.getLogger("pytest_assay")
+    assert any(isinstance(h, logging.NullHandler) for h in root.handlers)
 
 
-def test_logfire_logging() -> None:
-    """Test that Logfire can write log messages without error."""
-    logfire.info("Test message from test_logfire_logging")
+def test_logging_does_not_raise() -> None:
+    """Test that logging calls do not raise."""
+    logger.info("Test message from test_logging_does_not_raise")
+    logger.debug("Debug message from test_logging_does_not_raise")
