@@ -13,7 +13,6 @@ def test_config_default_values() -> None:
         )
     assert c.ollama_base_url == "http://localhost:11434"
     assert c.ollama_model == "qwen2.5:14b"
-    assert c.logfire_token is None
 
 
 def test_config_env_override() -> None:
@@ -23,7 +22,6 @@ def test_config_env_override() -> None:
         {
             "OLLAMA_BASE_URL": "http://custom-host:9999",
             "OLLAMA_MODEL": "llama3:8b",
-            "LOGFIRE_TOKEN": "test-token-123",
         },
     ):
         c = Config(
@@ -31,7 +29,6 @@ def test_config_env_override() -> None:
         )
         assert c.ollama_base_url == "http://custom-host:9999"
         assert c.ollama_model == "llama3:8b"
-        assert c.logfire_token == "test-token-123"
 
 
 def test_config_case_insensitive() -> None:

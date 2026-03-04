@@ -1,6 +1,6 @@
 [project]
 name = "pytest-assay"
-version = "0.1.2"
+version = "0.1.3"
 description = "Evaluation framework for Pydantic AI agents"
 keywords = [
     "pytest", "pytest-plugin", "pydantic", "pydantic-ai",
@@ -29,12 +29,10 @@ authors = [{ name = "Lars Nilse", email = "l.nilse@dunelm.org.uk" }]
 license = "MIT"
 requires-python = ">=3.11,<3.14"
 dependencies = [
-  "loguru>=0.7.3",
   "pydantic>=2.10.6",
   "pydantic-ai[examples]>=1.56.0",
-  "logfire[httpx]>=3.10.0",
   "python-dotenv>=1.1.0",
-  "pydantic-evals[logfire]>=0.0.51",
+  "pydantic-evals>=0.0.51",
   "pydantic-ai-slim[mcp]>=0.0.40",
   "pydantic-settings>=2.8.1",
   "choix>=0.4.1",
