@@ -23,6 +23,8 @@
     "ms-vscode.vscode-copilot-data-analysis",
     "AutomataLabs.copilot-mcp",
     "CodeRabbit.coderabbit-vscode",
+    // Claude
+    "anthropic.claude-code",
     // spell checker
     "streetsidesoftware.code-spell-checker",
     // logging
