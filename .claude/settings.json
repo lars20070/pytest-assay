@@ -106,5 +106,17 @@
   "enabledMcpjsonServers": [
     "context7",
     "github"
-  ]
+  ],
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/lat-prompt-hook.sh"
+          }
+        ]
+      }
+    ]
+  }
 }

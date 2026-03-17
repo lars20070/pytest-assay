@@ -11,6 +11,12 @@
     "github": {
       "type": "http",
       "url": "https://api.githubcopilot.com/mcp/"
+    },
+    "lat": {
+      "command": "/Users/lars/Code/lat.md/dist/src/cli/index.js",
+      "args": [
+        "mcp"
+      ]
     }
   }
 }
