@@ -3,7 +3,7 @@ import logging
 from pytest_assay.logger import logger
 
 
-# @lat: [[tests#Logger Tests]]
+# @lat: [[tests/logger-tests]]
 def test_logger_is_stdlib_logger() -> None:
     """Test that logger is a stdlib logging.Logger."""
     assert isinstance(logger, logging.Logger)
