@@ -8,6 +8,8 @@ Unit tests in `tests/evaluators/test_pairwise.py`.
 
 ## PairwiseEvaluator
 
+Tests for the `PairwiseEvaluator` class, covering initialization, model variants, comparison logic, edge cases, and protocol conformance.
+
 - Default init: `OpenAIChatModel` on Ollama, `temperature=0.0`, `timeout=300`, default criterion.
 - Custom criterion stored.
 - Custom `OpenAIChatModel` used and reflected on the internal agent.

@@ -8,6 +8,8 @@ Unit and integration tests in `tests/evaluators/test_bradleyterry.py`.
 
 ## EvalPlayer
 
+Tests for the `EvalPlayer` data model, covering field defaults, mutability, and edge cases.
+
 - Created with required fields; `score` defaults to `None`.
 - Created with explicit `score`.
 - `score` is mutable after creation.
@@ -16,6 +18,8 @@ Unit and integration tests in `tests/evaluators/test_bradleyterry.py`.
 
 ## EvalGame
 
+Tests for the `EvalGame` game runner, covering criterion storage, winner/loser mapping, and prompt content.
+
 - `criterion` is stored on the model.
 - Returns `(player_A_idx, player_B_idx)` when the agent picks `"A"`.
 - Returns `(player_B_idx, player_A_idx)` when the agent picks `"B"`.
@@ -23,6 +27,8 @@ Unit and integration tests in `tests/evaluators/test_bradleyterry.py`.
 - Result tuple uses actual `idx` values, not positional indices.
 
 ## EvalTournament
+
+Tests for the `EvalTournament` orchestrator, covering construction, player lookup, strategy dispatch, and kwargs forwarding.
 
 - Constructed with the correct number of players and the game criterion.
 - `get_player_by_idx` returns the player with the matching `idx` and correct `item`.
@@ -33,6 +39,8 @@ Unit and integration tests in `tests/evaluators/test_bradleyterry.py`.
 - After `run()`, `tournament.players` is updated to the scored players returned by the strategy.
 
 ## BradleyTerryEvaluator
+
+Tests for the `BradleyTerryEvaluator` class, covering initialization, model variants, edge cases, and protocol conformance.
 
 - Default init: `OpenAIChatModel` on Ollama, `temperature=0.0`, `timeout=300`, default `criterion` and `max_standard_deviation=2.0`.
 - Custom `criterion` and `max_standard_deviation` stored.

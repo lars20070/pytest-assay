@@ -4,7 +4,7 @@ lat:
 ---
 # Plugin Unit Tests
 
-[[src/pytest_assay/plugin.py]] helper and hook coverage in `tests/test_plugin.py`.
+Helper and hook coverage for `src/pytest_assay/plugin.py` in `tests/test_plugin.py`.
 
 ## _path
 
@@ -76,4 +76,6 @@ Tests for teardown when `assay_mode == "evaluate"`.
 
 ## Full Workflow
 
-End-to-end test covering setup → call → teardown in `new_baseline` mode: a generator creates cases, `pytest_runtest_setup` injects the context, simulated `Agent.run()` responses are stored in the stash, and teardown serializes the merged dataset with the correct `expected_output` per case.
+End-to-end test covering setup → call → teardown in `new_baseline` mode.
+
+A generator creates cases, `pytest_runtest_setup` injects the context, simulated `Agent.run()` responses are stored in the stash, and teardown serializes the merged dataset with the correct `expected_output` per case.

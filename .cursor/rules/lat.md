@@ -1,7 +1,7 @@
 # Before starting work
 
 - Use the `lat_search` tool to find sections relevant to your task. Read them to understand the design intent before writing code.
-- Use the `lat_prompt` tool on user prompts to expand any `[[refs]]` — this resolves section names to file locations and provides context.
+- Use the `lat_expand` tool on user prompts to expand any `[[refs]]` — this resolves section names to file locations and provides context.
 
 # Post-task checklist (REQUIRED — do not skip)
 
@@ -23,7 +23,7 @@ You have access to the following MCP tools from the `lat` server:
 
 - **lat_locate** — find a section by name (exact, fuzzy)
 - **lat_search** — semantic search across all sections
-- **lat_prompt** — expand `[[refs]]` in text to resolved locations
+- **lat_expand** — expand `[[refs]]` in text to resolved locations
 - **lat_check** — validate all wiki links and code refs
 - **lat_refs** — find what references a section
 
@@ -33,8 +33,8 @@ If `lat_search` fails because `LAT_LLM_KEY` is not set, explain to the user that
 
 - **Section ids**: `lat.md/path/to/file#Heading#SubHeading` — full form uses project-root-relative path (e.g. `lat.md/tests/search#RAG Replay Tests`). Short form uses bare file name when unique (e.g. `search#RAG Replay Tests`, `cli#search#Indexing`).
 - **Wiki links**: `[[target]]` or `[[target|alias]]` — cross-references between sections. Can also reference source code: `[[src/foo.ts#myFunction]]`.
-- **Source code links**: Wiki links in `lat.md/` files can reference functions, classes, constants, and methods in TypeScript/JavaScript/Python files. Use the full path: `[[src/config.ts#getConfigDir]]`, `[[src/server.ts#App#listen]]` (class method), `[[lib/utils.py#parse_args]]`. `lat check` validates these exist.
-- **Code refs**: `// @lat: [[section-id]]` (JS/TS) or `# @lat: [[section-id]]` (Python) — ties source code to concepts
+- **Source code links**: Wiki links in `lat.md/` files can reference functions, classes, constants, and methods in TypeScript/JavaScript/Python/Rust/Go/C files. Use the full path: `[[src/config.ts#getConfigDir]]`, `[[src/server.ts#App#listen]]` (class method), `[[lib/utils.py#parse_args]]`, `[[src/lib.rs#Greeter#greet]]` (Rust impl method), `[[src/app.go#Greeter#Greet]]` (Go method), `[[src/app.h#Greeter]]` (C struct). `lat check` validates these exist.
+- **Code refs**: `// @lat: [[section-id]]` (JS/TS/Rust/Go/C) or `# @lat: [[section-id]]` (Python) — ties source code to concepts
 
 # Test specs
 
@@ -47,7 +47,12 @@ lat:
 ---
 # Tests
 
+Authentication and authorization test specifications.
+
 ## User login
+
+Verify credential validation and error handling for the login endpoint.
+
 ### Rejects expired tokens
 Tokens past their expiry timestamp are rejected with 401, even if otherwise valid.
 
@@ -60,11 +65,11 @@ Every section MUST have a description — at least one sentence explaining what 
 Each test in code should reference its spec with exactly one comment placed next to the relevant test — not at the top of the file:
 
 ```python
-# @lat: [[tests/tests#User login#Rejects expired tokens]]
+# @lat: [[tests#User login#Rejects expired tokens]]
 def test_rejects_expired_tokens():
     ...
 
-# @lat: [[tests/tests#User login#Handles missing password]]
+# @lat: [[tests#User login#Handles missing password]]
 def test_handles_missing_password():
     ...
 ```
