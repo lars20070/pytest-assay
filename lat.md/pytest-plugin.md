@@ -85,35 +85,31 @@ Fixture teardown (e.g. VCR cassette close) happens after `yield`.
 
 ## ContextVar Tunnel
 
-`_current_item_var: ContextVar[Item | None]` is defined at module level. Because `Agent.run` is an async method called inside async test functions, a plain closure variable would be unsafe under concurrent execution. The `ContextVar` provides an execution-context-scoped binding: each asyncio task sees its own value, preventing cross-test contamination.
+`_current_item_var: ContextVar[Item | None]` is module-level, giving each asyncio task its own execution-context binding without modifying `Agent.run`'s signature.
 
-The call-hook sets the var with `set()`, which returns a `Token`. The `finally` block calls `reset(token)` to cleanly unwind, even if the test raises.
+Because `Agent.run` is async, a plain closure variable would be unsafe under concurrent execution. Each task sees its own value, preventing cross-test contamination. The call-hook sets the var with `set()`, which returns a `Token`. The `finally` block calls `reset(token)` to cleanly unwind, even if the test raises.
 
 ## _path
-
-[[src/pytest_assay/plugin.py#_path]]
 
 Computes `<test_dir>/assays/<module_stem>/<test_name>.json`. Strips parametrize suffixes (`[param]`) from the test name before constructing the path so parametrized variants share a common baseline file name root.
 
 ## _is_assay
 
-[[src/pytest_assay/plugin.py#_is_assay]]
-
 Returns `True` only when the item is a `Function` and carries the `assay` marker. Guards all hook logic to avoid interfering with non-assay tests.
 
 ## _serialize_baseline
 
-[[src/pytest_assay/plugin.py#_serialize_baseline]]
-
-Merges `item.stash[AGENT_RESPONSES_KEY]` into `assay.dataset.cases` as `expected_output` strings. Requires an exact 1-to-1 match between response count and case count; logs an error and skips serialization if they differ. Writes via `Dataset.to_file()` with `schema_path=None`.
+Merges captured responses into `assay.dataset.cases` as `expected_output` strings. Requires exact 1-to-1 count match; logs an error and skips if counts differ. Writes via `Dataset.to_file()` with `schema_path=None`.
 
 ## _run_evaluation
 
-[[src/pytest_assay/plugin.py#_run_evaluation]]
+Runs the evaluator against captured responses and serializes the resulting `Readout` to `<assay_path>.readout.json`.
 
-Retrieves the `evaluator` callable from the marker kwargs (default: `BradleyTerryEvaluator()`). Builds an `EvaluatorInput` from the baseline snapshot and captured responses, then calls `asyncio.run(evaluator(eval_input))`. Serializes the resulting `Readout` to `<assay_path>.readout.json`. See `lat.md/evaluators.md` for evaluator contracts.
+Retrieves the `evaluator` callable from marker kwargs (default: `BradleyTerryEvaluator()`). Builds an `EvaluatorInput` from the baseline snapshot and captured responses, then calls `asyncio.run(evaluator(eval_input))`.
 
 ## Stash Keys
+
+Module-level stash keys used to pass data between hook phases.
 
 | Key | Type | Set by | Read by |
 |-----|------|--------|---------|

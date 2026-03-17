@@ -4,7 +4,9 @@ lat:
 ---
 # Evaluators
 
-Evaluators compare captured agent responses against a stored baseline and produce a `Readout`. They are async callables conforming to the `Evaluator` protocol defined in [[src/pytest_assay/models.py#Evaluator]]. The plugin calls the evaluator in `_run_evaluation` via `asyncio.run(evaluator(eval_input))`.
+Evaluators compare captured agent responses against a stored baseline and produce a `Readout`. They are async callables conforming to the `Evaluator` protocol defined in [[evaluators#Evaluator Protocol]].
+
+The plugin calls the evaluator in `_run_evaluation` via `asyncio.run(evaluator(eval_input))`.
 
 ## Evaluator Protocol
 
@@ -17,8 +19,6 @@ Any async callable accepting `EvaluatorInput` and returning `Readout` satisfies 
 
 ## EvaluatorInput
 
-[[src/pytest_assay/models.py#EvaluatorInput]]
-
 Passed by the plugin to every evaluator:
 
 | Field | Type | Description |
@@ -27,8 +27,6 @@ Passed by the plugin to every evaluator:
 | `agent_responses` | `list[AgentRunResult]` | Responses captured by monkeypatching `Agent.run()` during the test run. |
 
 ## Readout
-
-[[src/pytest_assay/models.py#Readout]]
 
 Returned by every evaluator and serialized to `<assay_path>.readout.json`:
 
@@ -39,11 +37,11 @@ Returned by every evaluator and serialized to `<assay_path>.readout.json`:
 
 ## BradleyTerryEvaluator
 
-[[src/pytest_assay/evaluators/bradleyterry.py#BradleyTerryEvaluator]]
-
 The default evaluator. Runs a pairwise tournament across all baseline and novel responses, computes Bradley-Terry strength scores, and passes if the average novel score exceeds the average baseline score.
 
 ### How it works
+
+Converts all responses to players, orchestrates a tournament, and derives Bradley-Terry strength scores.
 
 1. All baseline `expected_output` strings become `EvalPlayer` instances (indices `0..n-1`).
 2. All novel `AgentRunResult.output` strings become further `EvalPlayer` instances (indices `n..2n-1`).
@@ -66,6 +64,8 @@ The judge agent uses `temperature=0.0` and `retries=5` for deterministic, robust
 
 ### Readout details
 
+Example JSON serialized to `<assay_path>.readout.json` after a BradleyTerry evaluation.
+
 ```json
 {
   "test_cases_count": 10,
@@ -76,11 +76,11 @@ The judge agent uses `temperature=0.0` and `retries=5` for deterministic, robust
 
 ## PairwiseEvaluator
 
-[[src/pytest_assay/evaluators/pairwise.py#PairwiseEvaluator]]
-
 A simpler evaluator that runs one direct A-vs-B comparison per response pair (baseline[i] vs novel[i]). Passes if novel wins more comparisons than it loses.
 
 ### How it works
+
+Pairs each baseline response with its novel counterpart and runs one direct A-vs-B comparison per pair.
 
 1. Baseline `expected_output` strings are paired 1-to-1 with novel `AgentRunResult.output` strings.
 2. For each pair, a judge LLM receives a prompt with `<A>` (baseline) and `<B>` (novel) and picks the better one.
@@ -88,6 +88,8 @@ A simpler evaluator that runs one direct A-vs-B comparison per response pair (ba
 4. Raises `AssertionError` if baseline and novel counts differ.
 
 ### Configuration
+
+Constructor parameters for `PairwiseEvaluator`.
 
 ```python
 PairwiseEvaluator(
@@ -98,6 +100,8 @@ PairwiseEvaluator(
 
 ### Readout details
 
+Example JSON serialized to `<assay_path>.readout.json` after a pairwise evaluation.
+
 ```json
 {
   "test_cases_count": 5,
@@ -107,6 +111,8 @@ PairwiseEvaluator(
 ```
 
 ### Comparison with BradleyTerry
+
+Side-by-side comparison of the two built-in evaluators across key operational dimensions.
 
 | | PairwiseEvaluator | BradleyTerryEvaluator |
 |---|---|---|
@@ -132,8 +138,6 @@ async def strategy(
 
 ### Adaptive Uncertainty Strategy
 
-[[src/pytest_assay/evaluators/bradleyterry.py#adaptive_uncertainty_strategy]]
-
 The default strategy. Two phases:
 
 **Bootstrap phase** — plays `max(2n, n/2 · log(n))` random games to ensure the comparison graph is strongly connected (Erdős-Rényi 1960 threshold).
@@ -150,32 +154,24 @@ Parameters: `max_standard_deviation` (default `2.0`), `alpha` prior strength (de
 
 ### Random Sampling Strategy
 
-[[src/pytest_assay/evaluators/bradleyterry.py#random_sampling_strategy]]
-
 Plays all `n(n-1)` directed games in random order (or a `fraction_of_games` subset). Simple exhaustive baseline; use when you want maximum coverage regardless of game count. Scores via `choix.ilsr_pairwise`.
 
 ### Round Robin Strategy
-
-[[src/pytest_assay/evaluators/bradleyterry.py#round_robin_strategy]]
 
 Each player plays `number_of_rounds` games against randomly chosen opponents. Scores via `choix.ilsr_pairwise`. Lower game count than random sampling but less coverage.
 
 ## Internal Models
 
-### EvalPlayer
+Pydantic models used internally by the BradleyTerry evaluator pipeline.
 
-[[src/pytest_assay/evaluators/bradleyterry.py#EvalPlayer]]
+### EvalPlayer
 
 `idx: int` — unique tournament index. `item: str` — the response text. `score: float | None` — Bradley-Terry strength, populated after tournament.
 
 ### EvalGame
 
-[[src/pytest_assay/evaluators/bradleyterry.py#EvalGame]]
-
 Holds the `criterion` string and runs a single pairwise comparison via `Agent.run()`. Returns `(winner_idx, loser_idx)`.
 
 ### EvalTournament
-
-[[src/pytest_assay/evaluators/bradleyterry.py#EvalTournament]]
 
 Holds `players` and `game`, delegates to a `TournamentStrategy` callable. Exposes `get_player_by_idx()` for post-tournament score retrieval.
