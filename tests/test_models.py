@@ -23,7 +23,7 @@ from pydantic_evals import Case, Dataset
 from pytest_assay.models import AssayContext, Evaluator, EvaluatorInput, Readout
 
 
-# @lat: [[tests#Model Unit Tests#EvaluatorInput]]
+# @lat: [[tests/model-unit-tests#EvaluatorInput]]
 class TestEvaluatorInput:
     """Tests for the EvaluatorInput model."""
 
@@ -123,7 +123,7 @@ class TestEvaluatorInput:
         assert eval_input.agent_responses[0].output is None
 
 
-# @lat: [[tests#Model Unit Tests#Readout]]
+# @lat: [[tests/model-unit-tests#Readout]]
 class TestReadout:
     """Tests for the Readout model."""
 
@@ -200,7 +200,7 @@ class TestReadout:
         assert data["details"] == {}
 
 
-# @lat: [[tests#Model Unit Tests#Evaluator Protocol]]
+# @lat: [[tests/model-unit-tests#Evaluator Protocol]]
 class TestEvaluator:
     """Tests for the Evaluator protocol.
 
@@ -218,7 +218,7 @@ class TestEvaluator:
         assert hasattr(Evaluator, "__protocol_attrs__") or callable(Evaluator)
 
 
-# @lat: [[tests#Model Unit Tests#AssayContext]]
+# @lat: [[tests/model-unit-tests#AssayContext]]
 class TestAssayContext:
     """Tests for the AssayContext model."""
 

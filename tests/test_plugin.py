@@ -54,7 +54,7 @@ def _drive_hookwrapper(item: Item, nextitem: Item | None = None) -> None:
 # =============================================================================
 
 
-# @lat: [[tests#Plugin Unit Tests#_path]]
+# @lat: [[tests/plugin-unit-tests#_path]]
 def test_path_computation(mocker: MockerFixture) -> None:
     """Test _path computes the correct assay file path."""
     mock_item = mocker.MagicMock(spec=Item)
@@ -101,7 +101,7 @@ def test_path_computation_nested_directory(mocker: MockerFixture) -> None:
     assert result == expected
 
 
-# @lat: [[tests#Plugin Unit Tests#_is_assay]]
+# @lat: [[tests/plugin-unit-tests#_is_assay]]
 def test_is_assay_with_marker(mocker: MockerFixture) -> None:
     """Test _is_assay returns True for Function items with assay marker."""
     mock_item = mocker.MagicMock(spec=Function)
@@ -133,7 +133,7 @@ def test_is_assay_non_function_item(mocker: MockerFixture) -> None:
 # =============================================================================
 
 
-# @lat: [[tests#Plugin Unit Tests#pytest_addoption]]
+# @lat: [[tests/plugin-unit-tests#pytest_addoption]]
 def test_pytest_addoption(mocker: MockerFixture) -> None:
     """Test pytest_addoption registers the --assay-mode option correctly."""
     mock_parser = mocker.MagicMock()
@@ -154,7 +154,7 @@ def test_pytest_addoption(mocker: MockerFixture) -> None:
 # =============================================================================
 
 
-# @lat: [[tests#Plugin Unit Tests#pytest_configure]]
+# @lat: [[tests/plugin-unit-tests#pytest_configure]]
 def test_pytest_configure(mocker: MockerFixture) -> None:
     """Test pytest_configure registers the assay marker."""
     mock_config = mocker.MagicMock()
@@ -173,7 +173,7 @@ def test_pytest_configure(mocker: MockerFixture) -> None:
 # =============================================================================
 
 
-# @lat: [[tests#Plugin Unit Tests#pytest_runtest_setup]]
+# @lat: [[tests/plugin-unit-tests#pytest_runtest_setup]]
 def test_pytest_runtest_setup_non_assay_item(mocker: MockerFixture) -> None:
     """Test pytest_runtest_setup skips non-assay items."""
     mock_item = mocker.MagicMock(spec=Item)
@@ -397,7 +397,7 @@ def test_pytest_runtest_setup_baseline_stash_is_copy(mocker: MockerFixture, tmp_
 # =============================================================================
 
 
-# @lat: [[tests#Plugin Unit Tests#pytest_runtest_call]]
+# @lat: [[tests/plugin-unit-tests#pytest_runtest_call]]
 def test_pytest_runtest_call_non_function_item(mocker: MockerFixture) -> None:
     """Test pytest_runtest_call yields immediately for non-Function items."""
     mock_item = mocker.MagicMock(spec=Item)
@@ -584,7 +584,7 @@ async def test_instrumented_agent_run_no_item_in_context(mocker: MockerFixture) 
 # =============================================================================
 
 
-# @lat: [[tests#Plugin Unit Tests#pytest_runtest_teardown — new_baseline path]]
+# @lat: [[tests/plugin-unit-tests#pytest_runtest_teardown — new_baseline path]]
 def test_pytest_runtest_teardown_non_assay_item(mocker: MockerFixture) -> None:
     """Test pytest_runtest_teardown skips non-assay items."""
     mock_item = mocker.MagicMock(spec=Item)
@@ -743,7 +743,7 @@ def test_pytest_runtest_teardown_new_baseline_no_responses(mocker: MockerFixture
 # =============================================================================
 
 
-# @lat: [[tests#Plugin Unit Tests#pytest_runtest_teardown — evaluate path]]
+# @lat: [[tests/plugin-unit-tests#pytest_runtest_teardown — evaluate path]]
 def test_pytest_runtest_teardown_evaluate_mode(mocker: MockerFixture, tmp_path: Path) -> None:
     """Test pytest_runtest_teardown does not serialize dataset in evaluate mode."""
     dataset_path = tmp_path / "assays" / "test.json"
@@ -898,7 +898,7 @@ def test_pytest_runtest_teardown_evaluation_exception(mocker: MockerFixture) -> 
 # =============================================================================
 
 
-# @lat: [[tests#Plugin Unit Tests#Full Workflow]]
+# @lat: [[tests/plugin-unit-tests#Full Workflow]]
 def test_full_assay_workflow_with_topic_generation(mocker: MockerFixture, tmp_path: Path) -> None:
     """
     Test a realistic assay workflow similar to test_curiosity.py.

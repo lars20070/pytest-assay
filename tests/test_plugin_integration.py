@@ -118,7 +118,7 @@ async def _run_query_generation(context: AssayContext, model_settings: ModelSett
     ),
 )
 @pytest.mark.asyncio
-# @lat: [[tests#Plugin Integration Tests]]
+# @lat: [[tests/plugin-integration-tests]]
 async def test_integration_pairwiseevaluator(context: AssayContext, model_settings: ModelSettings) -> None:
     """
     Integration test for the assay pytest plugin with PairwiseEvaluator evaluator.
