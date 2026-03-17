@@ -1,3 +1,7 @@
+---
+lat:
+  require-code-mention: true
+---
 # Pytest Plugin
 
 The pytest-assay plugin hooks into the pytest lifecycle to intercept `Agent.run()` calls, capture model outputs, and trigger evaluation or baseline serialization after each test.

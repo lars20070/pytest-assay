@@ -24,6 +24,7 @@ if TYPE_CHECKING:
 # ---------------------------------------------------------------------------
 
 
+# @lat: [[tests#Pairwise Evaluator Tests#PairwiseEvaluator]]
 class TestPairwiseEvaluator:
     """Unit tests for PairwiseEvaluator."""
 

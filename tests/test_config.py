@@ -5,6 +5,7 @@ from unittest.mock import patch
 from pytest_assay.config import Config, config
 
 
+# @lat: [[tests#Config Tests]]
 def test_config_default_values() -> None:
     """Test that Config has correct default values."""
     with patch.dict("os.environ", {}, clear=True):
