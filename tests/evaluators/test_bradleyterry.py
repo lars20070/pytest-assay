@@ -40,6 +40,7 @@ if TYPE_CHECKING:
 # ---------------------------------------------------------------------------
 
 
+# @lat: [[tests#BradleyTerry Evaluator Tests#EvalPlayer]]
 class TestEvalPlayer:
     """Unit tests for EvalPlayer."""
 
@@ -68,6 +69,7 @@ class TestEvalPlayer:
         assert player.item == ""
 
 
+# @lat: [[tests#BradleyTerry Evaluator Tests#EvalGame]]
 class TestEvalGame:
     """Unit tests for EvalGame (agent interaction mocked)."""
 
@@ -129,6 +131,7 @@ class TestEvalGame:
         assert result == (7, 3)
 
 
+# @lat: [[tests#BradleyTerry Evaluator Tests#EvalTournament]]
 class TestEvalTournament:
     """Unit tests for EvalTournament (strategy mocked)."""
 
@@ -241,6 +244,7 @@ class TestEvalTournament:
         assert ice_cream_tournament.players is scored
 
 
+# @lat: [[tests#BradleyTerry Evaluator Tests#BradleyTerryEvaluator]]
 class TestBradleyTerryEvaluator:
     """Unit tests for BradleyTerryEvaluator."""
 
@@ -378,6 +382,7 @@ class TestBradleyTerryEvaluator:
 
 @pytest.mark.ollama
 @pytest.mark.asyncio
+# @lat: [[tests#BradleyTerry Evaluator Tests#BradleyTerry Strategy Integration (ollama)]]
 async def test_evalgame_integration(ice_cream_players: list[EvalPlayer], evaluation_agent: Agent[None, Any], model_settings: ModelSettings) -> None:
     """Test the EvalGame class."""
     logger.info("Testing EvalGame() class")

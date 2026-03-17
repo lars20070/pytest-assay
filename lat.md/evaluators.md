@@ -1,3 +1,7 @@
+---
+lat:
+  require-code-mention: true
+---
 # Evaluators
 
 Evaluators compare captured agent responses against a stored baseline and produce a `Readout`. They are async callables conforming to the `Evaluator` protocol defined in [[src/pytest_assay/models.py#Evaluator]]. The plugin calls the evaluator in `_run_evaluation` via `asyncio.run(evaluator(eval_input))`.

@@ -1,3 +1,7 @@
+---
+lat:
+  require-code-mention: true
+---
 # Tests
 
 Test suite for pytest-assay. Unit tests use `pytest-mock` and `AsyncMock`; integration tests require a local Ollama instance and are gated by `@pytest.mark.ollama`.

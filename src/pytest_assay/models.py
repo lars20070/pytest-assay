@@ -9,6 +9,7 @@ from pydantic_ai.agent import AgentRunResult
 from pydantic_evals import Dataset
 
 
+# @lat: [[evaluators#EvaluatorInput]]
 class EvaluatorInput(BaseModel):
     """Input data passed to evaluators."""
 
@@ -16,6 +17,7 @@ class EvaluatorInput(BaseModel):
     agent_responses: list[AgentRunResult[Any]]
 
 
+# @lat: [[evaluators#Readout]]
 class Readout(BaseModel):
     """Result from an evaluator execution."""
 
@@ -33,6 +35,7 @@ class Readout(BaseModel):
             json.dump(self.model_dump(), f, indent=2)
 
 
+# @lat: [[evaluators#Evaluator Protocol]]
 class Evaluator(Protocol):
     """
     Protocol for evaluation strategy callables.
