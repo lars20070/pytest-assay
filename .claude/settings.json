@@ -113,7 +113,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/lars/Code/lat.md/dist/src/cli/index.js hook claude UserPromptSubmit"
+            "command": "lat hook claude UserPromptSubmit"
           }
         ]
       }
@@ -123,7 +123,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/lars/Code/lat.md/dist/src/cli/index.js hook claude Stop"
+            "command": "lat hook claude Stop"
           }
         ]
       }
