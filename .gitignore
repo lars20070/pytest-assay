@@ -16,6 +16,9 @@ coverage*
 *.dot
 codeql-custom-queries-python/
 
+# Caches
+.cache/
+
 # Coding agents
 .cursor/mcp.json
 .mcp.json
