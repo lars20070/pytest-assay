@@ -18,7 +18,6 @@ codeql-custom-queries-python/
 
 # lat.md
 .cache/
-.obsidian/
 
 # Coding agents
 .cursor/mcp.json
