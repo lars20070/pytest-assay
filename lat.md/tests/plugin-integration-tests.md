@@ -14,8 +14,8 @@ Runs the full plugin lifecycle with `PairwiseEvaluator` using a creativity crite
 
 ## BradleyTerryEvaluator Integration
 
-Runs the full plugin lifecycle with `BradleyTerryEvaluator` using the same creativity criterion and `max_standard_deviation=2.1`; verifies a `.readout.json` is written to disk.
+Runs the full plugin lifecycle with `BradleyTerryEvaluator` using the same creativity criterion and `max_standard_deviation=2.1`; verifies a `.readout.json` is written to disk. See [[tests/test_plugin_integration.py#test_integration_bradleyterryevaluator]].
 
 ## Custom Evaluator Integration
 
-Runs the full plugin lifecycle with a user-defined `LengthEvaluator` (not part of the package) that passes when a majority of novel responses are longer than their baseline counterparts. Demonstrates the custom evaluator extension point.
+Runs the full plugin lifecycle with a user-defined `LengthEvaluator` (not part of the package) that passes when a majority of novel responses are longer than their baseline counterparts. Demonstrates the custom evaluator extension point. See [[tests/test_plugin_integration.py#test_integration_lengthevaluator]].
