@@ -103,9 +103,9 @@ Merges captured responses into `assay.dataset.cases` as `expected_output` string
 
 ## _run_evaluation
 
-Runs the evaluator against captured responses and serializes the resulting `Readout` to `<assay_path>.readout.json`.
+Runs the evaluator against captured responses and serializes the resulting [[evaluators#Readout]] to `<assay_path>.readout.json`.
 
-Retrieves the `evaluator` callable from marker kwargs (default: `BradleyTerryEvaluator()`). Builds an `EvaluatorInput` from the baseline snapshot and captured responses, then calls `asyncio.run(evaluator(eval_input))`.
+Retrieves the [[evaluators#Evaluator Protocol|evaluator]] callable from marker kwargs (default: `BradleyTerryEvaluator()`). Builds an [[evaluators#EvaluatorInput]] from the baseline snapshot and captured responses, then calls `asyncio.run(evaluator(eval_input))`.
 
 ## Stash Keys
 
