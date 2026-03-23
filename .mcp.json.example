@@ -15,6 +15,14 @@
       "headers": {
         "Authorization": "Bearer YOUR_GITHUB_PAT"
       }
+    },
+    "lat": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "/path/to/lat.md/dist/src/cli/index.js",
+        "mcp"
+      ]
     }
   }
 }
