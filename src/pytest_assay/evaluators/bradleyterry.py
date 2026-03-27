@@ -80,14 +80,14 @@ Do NOT include explanations, reasoning, or any other fields.
 EVALUATION_GAME_PROMPT = "<QUESTION> {criterion} </QUESTION>\n<A> {a} </A>\n<B> {b} </B>"
 
 
-# @lat: [[evaluators#Internal Models#EvalPlayer]]
+# @lat: [[bradleyterry-evaluator#Internal Models#EvalPlayer]]
 class EvalPlayer(BaseModel):
     idx: int = Field(..., description="unique identifier for the player")
     item: str = Field(..., description="item to be scored")
     score: float | None = Field(default=None, description="Bradley-Terry strength score for the item")
 
 
-# @lat: [[evaluators#Internal Models#EvalGame]]
+# @lat: [[bradleyterry-evaluator#Internal Models#EvalGame]]
 class EvalGame(BaseModel):
     criterion: str = Field(..., description="evaluation criterion on which players should be judged")
 
@@ -112,7 +112,7 @@ TournamentStrategy = Callable[
 ]
 
 
-# @lat: [[evaluators#Tournament Strategies#Random Sampling Strategy]]
+# @lat: [[bradleyterry-evaluator#Tournament Strategies#Random Sampling Strategy]]
 async def random_sampling_strategy(
     players: list[EvalPlayer],
     game: EvalGame,
@@ -171,7 +171,7 @@ async def random_sampling_strategy(
     return players
 
 
-# @lat: [[evaluators#Tournament Strategies#Round Robin Strategy]]
+# @lat: [[bradleyterry-evaluator#Tournament Strategies#Round Robin Strategy]]
 async def round_robin_strategy(
     players: list[EvalPlayer],
     game: EvalGame,
@@ -229,7 +229,7 @@ async def round_robin_strategy(
     return players
 
 
-# @lat: [[evaluators#Tournament Strategies#Adaptive Uncertainty Strategy]]
+# @lat: [[bradleyterry-evaluator#Tournament Strategies#Adaptive Uncertainty Strategy]]
 async def adaptive_uncertainty_strategy(
     players: list[EvalPlayer],
     game: EvalGame,
@@ -368,7 +368,7 @@ async def adaptive_uncertainty_strategy(
     return players
 
 
-# @lat: [[evaluators#Internal Models#EvalTournament]]
+# @lat: [[bradleyterry-evaluator#Internal Models#EvalTournament]]
 class EvalTournament(BaseModel):
     game: EvalGame = Field(..., description="game to be played in the tournament")
     players: list[EvalPlayer] = Field(..., description="players participating in the tournament")
@@ -436,7 +436,7 @@ class BradleyTerryEvaluator:
     Configuration is set at instantiation; __call__ runs the evaluation.
     """
 
-    # @lat: [[evaluators#BradleyTerryEvaluator#Configuration]]
+    # @lat: [[bradleyterry-evaluator#BradleyTerryEvaluator#Configuration]]
     def __init__(
         self,
         model: str | OpenAIChatModel | None = None,
@@ -473,8 +473,8 @@ class BradleyTerryEvaluator:
         self.criterion = criterion
         self.max_standard_deviation = max_standard_deviation
 
-    # @lat: [[evaluators#BradleyTerryEvaluator#How it works]]
-    # @lat: [[evaluators#BradleyTerryEvaluator#Readout details]]
+    # @lat: [[bradleyterry-evaluator#BradleyTerryEvaluator#How it works]]
+    # @lat: [[bradleyterry-evaluator#BradleyTerryEvaluator#Readout details]]
     async def __call__(self, input: EvaluatorInput) -> Readout:
         """
         Run Bradley-Terry tournament on baseline and novel responses.

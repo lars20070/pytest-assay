@@ -71,7 +71,7 @@ Do NOT include explanations, reasoning, or any other fields.
 """
 
 
-# @lat: [[evaluators#PairwiseEvaluator#Comparison with BradleyTerry]]
+# @lat: [[pairwise-evaluator#PairwiseEvaluator#Comparison with BradleyTerry]]
 class PairwiseEvaluator:
     """
     Evaluates test outputs using pairwise comparison.
@@ -79,7 +79,7 @@ class PairwiseEvaluator:
     Configuration is set at instantiation; __call__ runs the evaluation.
     """
 
-    # @lat: [[evaluators#PairwiseEvaluator#Configuration]]
+    # @lat: [[pairwise-evaluator#PairwiseEvaluator#Configuration]]
     def __init__(
         self,
         model: str | OpenAIChatModel | None = None,
@@ -113,8 +113,8 @@ class PairwiseEvaluator:
         )
         self.criterion = criterion
 
-    # @lat: [[evaluators#PairwiseEvaluator#How it works]]
-    # @lat: [[evaluators#PairwiseEvaluator#Readout details]]
+    # @lat: [[pairwise-evaluator#PairwiseEvaluator#How it works]]
+    # @lat: [[pairwise-evaluator#PairwiseEvaluator#Readout details]]
     async def __call__(self, input: EvaluatorInput) -> Readout:
         """
         Run pairwise comparison of baseline and novel responses.
