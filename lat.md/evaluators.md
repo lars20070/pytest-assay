@@ -23,7 +23,7 @@ Passed by the plugin to every evaluator:
 
 | Field | Type | Description |
 |---|---|---|
-| `baseline_dataset` | `Dataset \| None` | Deep-copied snapshot from the loaded assay JSON. `None` when no baseline file exists. |
+| `baseline_dataset` | <code>Dataset &#124; None</code> | Deep-copied snapshot from the loaded assay JSON. `None` when no baseline file exists. |
 | `agent_responses` | `list[AgentRunResult]` | Responses captured by monkeypatching `Agent.run()` during the test run. |
 
 ## Readout
