@@ -33,7 +33,7 @@ Returned by every evaluator and serialized to `<assay_path>.readout.json`:
 | Field | Type | Description |
 |---|---|---|
 | `passed` | `bool` | Whether novel responses outperformed the baseline. Defaults to `True`. |
-| `details` | `dict \| None` | Evaluator-specific structured data (scores, win counts, etc.). |
+| `details` | <code>dict &#124; None</code> | Evaluator-specific structured data (scores, win counts, etc.). |
 
 ## BradleyTerryEvaluator
 
