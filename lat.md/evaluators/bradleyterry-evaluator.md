@@ -85,9 +85,7 @@ Pydantic models used internally by the Bradley-Terry evaluator pipeline.
 
 ### EvalPlayer
 
-* `idx: int` — unique tournament index.
-* `item: str` — the response text.
-* `score: float | None` — Bradley-Terry strength, populated after tournament.
+`idx: int` — unique tournament index. `item: str` — the response text. `score: float | None` — Bradley-Terry strength, populated after tournament.
 
 ### EvalGame
 
