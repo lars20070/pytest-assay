@@ -1,0 +1,29 @@
+{
+  "$schema": "https://context7.com/schema/context7.json",
+  "projectTitle": "pytest-assay",
+  "description": "Evaluation framework for Pydantic AI agents using pytest markers, pairwise comparison, and baseline readout reports.",
+  "folders": [],
+  "excludeFolders": [
+    ".agents",
+    ".claude",
+    ".cursor",
+    ".devcontainer",
+    ".vscode",
+    ".github",
+    "lat.md/.obsidian"
+  ],
+  "excludeFiles": [
+    "uv.lock",
+    ".codecov.yaml",
+    ".coderabbit.yaml",
+    ".cursorignore",
+    ".mcp.json.example"
+  ],
+  "rules": [
+    "Always use the @pytest.mark.assay decorator with a generator and evaluator parameter",
+    "Use PairwiseEvaluator for comparing agent responses against baselines",
+    "Run with --assay-mode=new_baseline to generate baseline data before evaluating",
+    "Baseline and readout files are stored in tests/assays/ by convention",
+    "pytest-assay is designed specifically for Pydantic AI agents using Agent.run()"
+  ]
+}
