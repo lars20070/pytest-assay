@@ -4,7 +4,7 @@ lat:
 ---
 # BradleyTerryEvaluator
 
-The default evaluator. Runs a pairwise tournament across all baseline and novel responses, computes Bradley-Terry strength scores, and passes if the average novel score exceeds the average baseline score.
+The default evaluator. Runs a tournament of pairwise games across all baseline and novel responses, computes [Bradley-Terry strength scores](https://en.wikipedia.org/wiki/Bradley–Terry_model), and passes if the average novel score exceeds the average baseline score.
 
 ## How it works
 
@@ -31,7 +31,7 @@ The judge agent uses `temperature=0.0` and `retries=5` for deterministic, robust
 
 ## Readout details
 
-Example JSON serialized to `<assay_path>.readout.json` after a BradleyTerry evaluation.
+Example JSON serialized to `<assay_path>.readout.json` after a Bradley-Terry evaluation.
 
 ```json
 {
@@ -81,11 +81,13 @@ Each player plays `number_of_rounds` games against randomly chosen opponents. Sc
 
 ## Internal Models
 
-Pydantic models used internally by the BradleyTerry evaluator pipeline.
+Pydantic models used internally by the Bradley-Terry evaluator pipeline.
 
 ### EvalPlayer
 
-`idx: int` — unique tournament index. `item: str` — the response text. `score: float | None` — Bradley-Terry strength, populated after tournament.
+* `idx: int` — unique tournament index.
+* `item: str` — the response text.
+* `score: float | None` — Bradley-Terry strength, populated after tournament.
 
 ### EvalGame
 
