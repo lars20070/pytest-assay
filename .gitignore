@@ -16,10 +16,8 @@ coverage*
 *.dot
 codeql-custom-queries-python/
 
-# lat.md
+# lat.md + Obsidian
 .cache/
-
-# Obsidian
 workspace.json
 
 # Coding agents
