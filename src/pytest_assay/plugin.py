@@ -16,15 +16,18 @@ from .evaluators.pairwise import PairwiseEvaluator  # noqa: F401
 from .logger import logger
 from .models import AssayContext, Evaluator, EvaluatorInput, Readout  # noqa: F401
 
+# @lat: [[pytest-plugin#Assay Modes]]
 # Modes for the assay plugin. "evaluate" is the default mode.
 ASSAY_MODES = ("evaluate", "new_baseline")
 
+# @lat: [[pytest-plugin#Stash Keys]]
 # Key to stash the baseline dataset from previous runs
 BASELINE_DATASET_KEY = pytest.StashKey[Dataset]()
 
 # Key to stash Agent responses during assay tests
 AGENT_RESPONSES_KEY = pytest.StashKey[list[AgentRunResult[Any]]]()
 
+# @lat: [[pytest-plugin#ContextVar Tunnel]]
 # Items stashed by the _wrapped_run wrapper. Required for async safety.
 # _current_item_var defined at module level. But items are stored locally to the current execution context.
 _current_item_var: contextvars.ContextVar[Item | None] = contextvars.ContextVar("_current_item", default=None)
@@ -35,6 +38,8 @@ _current_item_var: contextvars.ContextVar[Item | None] = contextvars.ContextVar(
 # =============================================================================
 
 
+# @lat: [[pytest-plugin#Baseline File Layout]]
+# @lat: [[pytest-plugin#_path]]
 def _path(item: Item) -> Path:
     """
     Compute assay file path: <test_dir>/assays/<module>/<test>.json.
@@ -48,6 +53,7 @@ def _path(item: Item) -> Path:
     return path.parent / "assays" / module_name / f"{test_name}.json"
 
 
+# @lat: [[pytest-plugin#_is_assay]]
 def _is_assay(item: Item) -> bool:
     """
     Check if item is a valid assay unit test:
@@ -62,6 +68,7 @@ def _is_assay(item: Item) -> bool:
     return item.get_closest_marker("assay") is not None
 
 
+# @lat: [[pytest-plugin#_serialize_baseline]]
 def _serialize_baseline(item: Item, assay: AssayContext) -> None:
     """
     Serialize the dataset to disk in 'new_baseline' mode.
@@ -89,6 +96,7 @@ def _serialize_baseline(item: Item, assay: AssayContext) -> None:
     assay.dataset.to_file(assay.path, schema_path=None)
 
 
+# @lat: [[pytest-plugin#_run_evaluation]]
 def _run_evaluation(item: Item, assay: AssayContext) -> None:
     """
     Run the configured evaluator on captured responses in (default) 'evaluate' mode.
@@ -148,6 +156,7 @@ def pytest_addoption(parser: Parser) -> None:
     )
 
 
+# @lat: [[pytest-plugin#Marker]]
 def pytest_configure(config: Config) -> None:
     """
     Register the @pytest.mark.assay marker.
@@ -170,6 +179,7 @@ def pytest_configure(config: Config) -> None:
 
 
 @pytest.hookimpl(tryfirst=True)
+# @lat: [[pytest-plugin#Lifecycle#Setup — pytest_runtest_setup]]
 def pytest_runtest_setup(item: Item) -> None:
     """
     Load dataset and inject AssayContext into the test function.
@@ -217,6 +227,7 @@ def pytest_runtest_setup(item: Item) -> None:
 
 
 @pytest.hookimpl(hookwrapper=True)
+# @lat: [[pytest-plugin#Lifecycle#Call — pytest_runtest_call]]
 def pytest_runtest_call(item: Item) -> Generator[None, None, None]:
     """
     Intercepts Agent.run() calls during test execution to record model outputs.
@@ -297,6 +308,7 @@ def pytest_runtest_call(item: Item) -> Generator[None, None, None]:
 
 
 @pytest.hookimpl(hookwrapper=True)
+# @lat: [[pytest-plugin#Lifecycle#Teardown — pytest_runtest_teardown]]
 def pytest_runtest_teardown(item: Item, nextitem: Item | None) -> Generator[None, None, None]:
     """
     Hookwrapper for test teardown that runs evaluation or baseline serialization.

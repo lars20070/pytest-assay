@@ -16,6 +16,10 @@ coverage*
 *.dot
 codeql-custom-queries-python/
 
+# lat.md + Obsidian
+.cache/
+workspace.json
+
 # Coding agents
 .cursor/mcp.json
 .mcp.json

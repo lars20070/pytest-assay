@@ -118,6 +118,7 @@ async def _run_query_generation(context: AssayContext, model_settings: ModelSett
     ),
 )
 @pytest.mark.asyncio
+# @lat: [[tests/plugin-integration-tests#Plugin Integration Tests#PairwiseEvaluator Integration]]
 async def test_integration_pairwiseevaluator(context: AssayContext, model_settings: ModelSettings) -> None:
     """
     Integration test for the assay pytest plugin with PairwiseEvaluator evaluator.
@@ -143,6 +144,7 @@ async def test_integration_pairwiseevaluator(context: AssayContext, model_settin
     ),
 )
 @pytest.mark.asyncio
+# @lat: [[tests/plugin-integration-tests#Plugin Integration Tests#BradleyTerryEvaluator Integration]]
 async def test_integration_bradleyterryevaluator(context: AssayContext, model_settings: ModelSettings) -> None:
     """
     Integration test for the assay pytest plugin with BradleyTerryEvaluator evaluator.
@@ -216,6 +218,7 @@ class LengthEvaluator:
     evaluator=LengthEvaluator(),
 )
 @pytest.mark.asyncio
+# @lat: [[tests/plugin-integration-tests#Plugin Integration Tests#Custom Evaluator Integration]]
 async def test_integration_lengthevaluator(context: AssayContext, model_settings: ModelSettings) -> None:
     """
     Integration test for a custom evaluator.

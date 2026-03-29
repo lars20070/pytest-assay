@@ -1,0 +1,25 @@
+name: lat check
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lat-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4.2.0
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install lat.md
+        run: npm install -g lat.md
+      - name: Run lat check
+        run: lat check
