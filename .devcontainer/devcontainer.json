@@ -56,7 +56,8 @@
     "UV_FROZEN": "0",
     "UV_LINK_MODE": "copy",
     "UV_COMPILE_BYTECODE": "1", // uv will compile .py files to .pyc files. Speeds up startup time.
-    "PYTHONUNBUFFERED": "1" // Ensure stdout and stderr are unbuffered.
+    "PYTHONUNBUFFERED": "1", // Ensure stdout and stderr are unbuffered.
+    "LAT_LLM_KEY": "${localEnv:LAT_LLM_KEY}" // Forward host's LAT_LLM_KEY into the container. Required for `lat search`.
   },
   // Use 'remoteEnv' to set environment variables for the remote workspace. Visible to VS Code background process only.
   "remoteEnv": {},
@@ -65,7 +66,7 @@
   "postCreateCommand": [
     "bash",
     "-c",
-    "rm -rf .venv 2>/dev/null || true && uv sync"
+    "rm -rf .venv 2>/dev/null || true && uv sync && npm install -g lat.md"
   ],
   //"postStartCommand": "",
   // Configure tool-specific properties.
