@@ -39,5 +39,5 @@ Returned by every evaluator and serialized to `<assay_path>.readout.json`:
 
 The framework ships with two built-in evaluators:
 
-- [[bradleyterry---evaluator]] — A tournament-based evaluator producing continuous strength scores.
+- [[bradleyterry-evaluator]] — A tournament-based evaluator producing continuous strength scores.
 - [[pairwise-evaluator]] — A simple A-vs-B evaluator producing binary win/loss results.
