@@ -22,10 +22,11 @@
     ".mcp.json.example"
   ],
   "rules": [
-    "Always use the @pytest.mark.assay decorator with a generator and evaluator parameter",
-    "Use PairwiseEvaluator for comparing agent responses against baselines",
-    "Run with --assay-mode=new_baseline to generate baseline data before evaluating",
-    "Baseline and readout files are stored in tests/assays/ by convention",
-    "pytest-assay is designed specifically for Pydantic AI agents using Agent.run()"
+    "Decorate test functions with @pytest.mark.assay(generator=my_generator, evaluator=MyEvaluator()) — generator returns a Dataset, evaluator defaults to BradleyTerryEvaluator()",
+    "Assay tests receive an AssayContext via the context parameter — iterate over context.dataset.cases to access each Case's inputs and expected_output",
+    "Agent.run() calls inside an assay test are automatically captured — just call your Pydantic AI agent normally, no extra instrumentation needed",
+    "Run with --assay-mode=new_baseline first to record baseline responses, then --assay-mode=evaluate (default) to compare novel responses against the baseline",
+    "Custom evaluators are async callables with signature (EvaluatorInput) -> Readout — implement __call__ to define your own evaluation logic",
+    "BradleyTerryEvaluator and PairwiseEvaluator both accept a model and criterion parameter to configure the judge LLM and comparison question"
   ]
 }
