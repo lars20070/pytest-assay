@@ -192,9 +192,13 @@ knowledge_base:
   code_guidelines:
     enabled: true
     filePatterns:
+      - ".claude/rules/general.mdc"
+      - ".claude/rules/python.mdc"
+      - ".claude/rules/python-testing.mdc"
       - ".cursor/rules/general.mdc"
       - ".cursor/rules/python.mdc"
       - ".cursor/rules/python-testing.mdc"
+      - "lat.md/**/*.md"
   learnings:
     scope: auto
   issues:
