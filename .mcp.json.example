@@ -18,9 +18,8 @@
     },
     "lat": {
       "type": "stdio",
-      "command": "node",
+      "command": "lat",
       "args": [
-        "/path/to/lat.md/dist/src/cli/index.js",
         "mcp"
       ]
     }
