@@ -14,12 +14,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v4.2.0
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-      - name: Install lat.md
-        run: npm install -g lat.md
+        uses: actions/checkout@v4
       - name: Run lat check
-        run: lat check
+        uses: lars20070/lat-check-action@v1
